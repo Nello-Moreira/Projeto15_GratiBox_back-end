@@ -22,4 +22,8 @@ function createConfig() {
 
 const dbConnection = new Pool(createConfig());
 
-export default dbConnection;
+function endConnection() {
+	dbConnection.end();
+}
+
+export { dbConnection, endConnection };
