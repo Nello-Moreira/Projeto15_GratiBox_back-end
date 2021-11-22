@@ -5,6 +5,7 @@ import cors from 'cors';
 import tokenMiddleware from './middlewares/tokenMiddleware.js';
 import signup from './controllers/signUp.js';
 import login from './controllers/login.js';
+import planOptions from './controllers/planOptions.js';
 
 const server = express();
 server.use(cors());
@@ -14,6 +15,7 @@ server.post(signup.route, signup.postSignUp);
 server.post(login.route, login.postLogin);
 
 server.use(tokenMiddleware);
-server.post(login.route, login.postLogin);
+
+server.get(planOptions.route, planOptions.getPlanOptions);
 
 export default server;

@@ -21,4 +21,12 @@ const loginSchema = Joi.object({
 	password: Joi.string().min(1).required(),
 }).max(2);
 
-export { loginSchema, signUpSchema };
+const tokenSchema = Joi.object({
+	token: Joi.string().guid({ version: ['uuidv4'] }).required,
+}).max(1);
+
+const planTypeSchema = Joi.object({
+	planType: Joi.string().min(1).required(),
+}).max(1);
+
+export { loginSchema, signUpSchema, tokenSchema, planTypeSchema };

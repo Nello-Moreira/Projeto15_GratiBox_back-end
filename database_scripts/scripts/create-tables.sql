@@ -47,7 +47,7 @@ CREATE TABLE "plans" (
 
 
 
-CREATE TABLE "monthly_dalivery_options" (
+CREATE TABLE "monthly_delivery_options" (
 	"id" serial NOT NULL,
 	"day" integer NOT NULL UNIQUE,
 	CONSTRAINT "monthly_dalivery_options_pk" PRIMARY KEY ("id")
@@ -57,7 +57,7 @@ CREATE TABLE "monthly_dalivery_options" (
 
 
 
-CREATE TABLE "weekly_dalivery_options" (
+CREATE TABLE "weekly_delivery_options" (
 	"id" serial NOT NULL,
 	"weekday" TEXT NOT NULL UNIQUE,
 	CONSTRAINT "weekly_dalivery_options_pk" PRIMARY KEY ("id")
