@@ -5,7 +5,7 @@ import { dbConnection } from './connection.js';
 const searchUser = (email) =>
 	dbConnection.query(
 		`SELECT
-			users.id, users.name, plans.type AS "planType"
+			users.id, users.name, users.password, plans.type AS "planType"
 		FROM users
 		JOIN plans
 			ON users.plan_id = plans.id

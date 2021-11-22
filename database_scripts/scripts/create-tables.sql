@@ -3,7 +3,7 @@ CREATE TABLE "users" (
 	"name" TEXT NOT NULL,
 	"email" TEXT NOT NULL,
 	"password" TEXT NOT NULL,
-	"plan_id" integer,
+	"plan_id" integer DEFAULT 1,
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -194,6 +194,7 @@ INSERT INTO "ratings" ("grade") VALUES
 (false);
 
 INSERT INTO "plans" ("type") VALUES 
+('notSubscribed'),
 ('Semanal'),
 ('Mensal');
 

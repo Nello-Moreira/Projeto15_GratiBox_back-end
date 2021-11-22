@@ -32,7 +32,7 @@ describe('Tests for post /sign-up', () => {
 		endConnection();
 	});
 
-	it('should return 200 for valid body', async () => {
+	it('should return 201 for valid body', async () => {
 		const response = await supertest(server).post(signup.route).send(validBody);
 		const user = await searchUser(validBody.email);
 		expect(response.status).toBe(201);
