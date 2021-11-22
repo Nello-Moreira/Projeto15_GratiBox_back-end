@@ -122,6 +122,17 @@ CREATE TABLE "ratings" (
 
 
 
+CREATE TABLE "sessions" (
+	"id" serial NOT NULL,
+	"user_id" integer NOT NULL,
+	"token" TEXT NOT NULL,
+	CONSTRAINT "sessions_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
 ALTER TABLE "users" ADD CONSTRAINT "users_fk0" FOREIGN KEY ("plan_id") REFERENCES "plans"("id");
 
 ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk0" FOREIGN KEY ("state_id") REFERENCES "states"("id");
@@ -141,13 +152,57 @@ ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk0" FOREIGN KEY ("delivery_id
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk1" FOREIGN KEY ("grade_id") REFERENCES "ratings"("id");
 
 
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 
 
+INSERT INTO "states" ("name", "initials") VALUES 
+('Acre', 'AC'),
+('Alagoas', 'AL'),
+('Amapá', 'AP'),
+('Amazonas', 'AM'),
+('Bahia', 'BA'),
+('Ceará', 'CE'),
+('Distrito Federal', 'DF'),
+('Espírito Santo', 'ES'),
+('Goiás', 'GO'),
+('Maranhão', 'MA'),
+('Mato Grosso', 'MT'),
+('Mato Grosso do Sul', 'MS'),
+('Minas Gerais', 'MG'),
+('Pará', 'PA'),
+('Paraíba', 'PB'),
+('Paraná', 'PR'),
+('Pernambuco', 'PE'),
+('Piauí', 'PI'),
+('Rio de Janeiro', 'RJ'),
+('Rio Grande do Norte', 'RN'),
+('Rio Grande do Sul', 'RS'),
+('Rondônia', 'RO'),
+('Roraima', 'RR'),
+('Santa Catarina', 'SC'),
+('São Paulo', 'SP'),
+('Sergipe', 'SE'),
+('Tocantins', 'TO');
 
+INSERT INTO "products" ("name") VALUES 
+('Chás'),
+('Produtos orgânicos'),
+('Incensos');
 
+INSERT INTO "ratings" ("grade") VALUES 
+(true),
+(false);
 
+INSERT INTO "plans" ("type") VALUES 
+('Semanal'),
+('Mensal');
 
+INSERT INTO "weekly_dalivery_options" ("weekday") VALUES 
+('Segunda-feira'),
+('Quarta-feira'),
+('Sexta-feira');
 
-
-
-
+INSERT INTO "monthly_dalivery_options" ("day") VALUES 
+(1),
+(10),
+(20);

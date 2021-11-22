@@ -1,11 +1,11 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import signUpSchema from '../validation/schemas.js';
+import { signUpSchema } from '../validation/schemas.js';
 import { searchUser, insertUser } from '../data/usersTable.js';
 import { hashPassword } from '../helpers/passwordEncrypt.js';
 
 const route = '/sign-up';
 
-async function postRoute(request, response) {
+async function postSignUp(request, response) {
 	const signUpValidationError = signUpSchema.validate(request.body).error;
 
 	if (signUpValidationError) {
@@ -28,7 +28,7 @@ async function postRoute(request, response) {
 
 const signup = {
 	route,
-	postRoute,
+	postSignUp,
 };
 
 export default signup;

@@ -3,7 +3,7 @@
 import { dbConnection } from './connection.js';
 
 const searchUser = (email) =>
-	dbConnection.query('SELECT email FROM users WHERE email = $1;', [email]);
+	dbConnection.query('SELECT * FROM users WHERE email = $1;', [email]);
 
 const insertUser = ({ name, email, password }) =>
 	dbConnection.query(
