@@ -42,6 +42,9 @@ describe('Tests for post /login', () => {
 		const response = await supertest(server).post(login.route).send(validBody);
 		const session = await searchSession(response.body.token);
 		expect(response.status).toBe(200);
+		expect(response.body).toHaveProperty('name');
+		expect(response.body).toHaveProperty('token');
+		expect(response.body).toHaveProperty('planType');
 		expect(session.rowCount).toBe(1);
 	});
 
