@@ -22,7 +22,7 @@ const loginSchema = Joi.object({
 }).max(2);
 
 const tokenSchema = Joi.object({
-	token: Joi.string().guid({ version: ['uuidv4'] }).required,
+	token: Joi.string().guid({ version: ['uuidv4'] }),
 }).max(1);
 
 const planTypeSchema = Joi.object({

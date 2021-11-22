@@ -3,7 +3,8 @@ CREATE TABLE "users" (
 	"name" TEXT NOT NULL,
 	"email" TEXT NOT NULL,
 	"password" TEXT NOT NULL,
-	"plan_id" integer DEFAULT 1,
+	"plan_id" integer DEFAULT '1',
+	"delivery_option_id" integer,
 	"subscription_date" DATE,
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -47,20 +48,11 @@ CREATE TABLE "plans" (
 
 
 
-CREATE TABLE "monthly_delivery_options" (
+CREATE TABLE "delivery_options" (
 	"id" serial NOT NULL,
-	"day" integer NOT NULL UNIQUE,
-	CONSTRAINT "monthly_dalivery_options_pk" PRIMARY KEY ("id")
-) WITH (
-  OIDS=FALSE
-);
-
-
-
-CREATE TABLE "weekly_delivery_options" (
-	"id" serial NOT NULL,
-	"weekday" TEXT NOT NULL UNIQUE,
-	CONSTRAINT "weekly_dalivery_options_pk" PRIMARY KEY ("id")
+	"plan_id" integer NOT NULL,
+	"name" TEXT NOT NULL,
+	CONSTRAINT "delivery_options_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
@@ -132,17 +124,13 @@ CREATE TABLE "sessions" (
   OIDS=FALSE
 );
 
-
-
 ALTER TABLE "users" ADD CONSTRAINT "users_fk0" FOREIGN KEY ("plan_id") REFERENCES "plans"("id");
+ALTER TABLE "users" ADD CONSTRAINT "users_fk1" FOREIGN KEY ("delivery_option_id") REFERENCES "delivery_options"("id");
 
 ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk0" FOREIGN KEY ("state_id") REFERENCES "states"("id");
 ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk1" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 
-
-
-
-
+ALTER TABLE "delivery_options" ADD CONSTRAINT "delivery_options_fk0" FOREIGN KEY ("plan_id") REFERENCES "plans"("id");
 
 ALTER TABLE "users_products" ADD CONSTRAINT "users_products_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 ALTER TABLE "users_products" ADD CONSTRAINT "users_products_fk1" FOREIGN KEY ("product_id") REFERENCES "products"("id");
@@ -152,9 +140,7 @@ ALTER TABLE "deliveries" ADD CONSTRAINT "deliveries_fk0" FOREIGN KEY ("user_id")
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk0" FOREIGN KEY ("delivery_id") REFERENCES "deliveries"("id");
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk1" FOREIGN KEY ("grade_id") REFERENCES "ratings"("id");
 
-
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
-
 
 INSERT INTO "states" ("name", "initials") VALUES 
 ('Acre', 'AC'),
@@ -196,15 +182,13 @@ INSERT INTO "ratings" ("grade") VALUES
 
 INSERT INTO "plans" ("type") VALUES 
 ('notSubscribed'),
-('Semanal'),
-('Mensal');
+('semanal'),
+('mensal');
 
-INSERT INTO "weekly_dalivery_options" ("weekday") VALUES 
-('Segunda-feira'),
-('Quarta-feira'),
-('Sexta-feira');
-
-INSERT INTO "monthly_dalivery_options" ("day") VALUES 
-(1),
-(10),
-(20);
+INSERT INTO "delivery_options" ("plan_id", "name") VALUES 
+(2, 'segunda-feira'),
+(2, 'quarta-feira'),
+(2, 'sexta-feira'),
+(3, '1'),
+(3, '10'),
+(3, '20');
