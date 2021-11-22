@@ -5,7 +5,7 @@ import { dbConnection } from './connection.js';
 const searchDeliveryOptions = (planType) =>
 	dbConnection.query(
 		`
-	SELECT delivery_options.name
+	SELECT delivery_options.id, delivery_options.name
 	FROM plans
 	JOIN delivery_options
 		ON plans.id = delivery_options.plan_id

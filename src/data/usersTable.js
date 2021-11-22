@@ -20,10 +20,10 @@ const insertUser = ({ name, email, password }) =>
 	);
 
 const updateUser = (userId, planId) =>
-	dbConnection.query('UPDATE users SET plan_id = $2 WHERE id = $1;', [
-		userId,
-		planId,
-	]);
+	dbConnection.query(
+		'UPDATE users SET plan_id = $2, subscription_date = NOW() WHERE id = $1;',
+		[userId, planId]
+	);
 
 const deleteAllUsers = () => dbConnection.query('DELETE FROM users');
 

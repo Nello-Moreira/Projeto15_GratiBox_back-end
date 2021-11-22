@@ -2,6 +2,6 @@
 /* eslint-disable implicit-arrow-linebreak */
 import { dbConnection } from './connection.js';
 
-const searchProducts = () => dbConnection.query('SELECT name FROM products;');
+const searchProducts = () => dbConnection.query('SELECT * FROM products;');
 
 export default searchProducts;
