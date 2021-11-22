@@ -16,15 +16,16 @@ server.use(cors());
 server.use(express.json());
 
 server.post(signup.route, signup.postSignUp);
+
 server.post(login.route, login.postLogin);
-
-server.use(tokenMiddleware);
-
-server.get(planOptions.route, planOptions.getPlanOptions);
 
 server.get(products.route, products.getProducts);
 
 server.get(states.route, states.getStates);
+
+server.get(planOptions.route, planOptions.getPlanOptions);
+
+server.use(tokenMiddleware);
 
 server.post(subscribe.route, subscribe.postSubscription);
 

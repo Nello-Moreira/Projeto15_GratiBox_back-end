@@ -22,6 +22,7 @@
 	},
 	"homepage": "https://github.com/Nello-Moreira/Projeto15_GratiBox_back-end#readme",
 	"dependencies": {
+		"dotenv": "^10.0.0",
 		"bcrypt": "^5.0.1",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
@@ -33,7 +34,6 @@
 		"@babel/plugin-transform-runtime": "^7.15.8",
 		"@babel/preset-env": "^7.15.8",
 		"babel-jest": "^27.3.1",
-		"dotenv": "^10.0.0",
 		"eslint": "^8.2.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "8.3.0",

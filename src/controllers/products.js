@@ -1,5 +1,5 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import searchProducts from '../data/productsTable.js';
+import { searchProducts } from '../data/productsTable.js';
 
 const route = '/products';
 

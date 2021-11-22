@@ -3,4 +3,11 @@ import { dbConnection } from './connection.js';
 
 const searchProducts = () => dbConnection.query('SELECT * FROM products;');
 
-export default searchProducts;
+const insertProducts = () =>
+	dbConnection.query(`
+    INSERT INTO products (name) VALUES
+    ('Chás'), ('Produtos orgânicos'), ('Incensos');`);
+
+const deleteAllProducts = () => dbConnection.query('DELETE FROM products;');
+
+export { searchProducts, insertProducts, deleteAllProducts };
