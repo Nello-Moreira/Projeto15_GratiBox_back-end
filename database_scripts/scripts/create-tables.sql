@@ -4,6 +4,7 @@ CREATE TABLE "users" (
 	"email" TEXT NOT NULL,
 	"password" TEXT NOT NULL,
 	"plan_id" integer DEFAULT 1,
+	"subscription_date" DATE,
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
