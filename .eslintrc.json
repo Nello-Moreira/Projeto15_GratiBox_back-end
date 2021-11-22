@@ -18,6 +18,16 @@
 		],
 		"indent": [2, "tab", { "SwitchCase": 1, "VariableDeclarator": 1 }],
 		"no-tabs": 0,
-		"object-curly-newline": "off"
+		"object-curly-newline": "off",
+		"comma-dangle": [
+			"error",
+			{
+				"arrays": "always-multiline",
+				"objects": "always-multiline",
+				"imports": "always-multiline",
+				"exports": "always-multiline",
+				"functions": "never"
+			}
+		]
 	}
 }

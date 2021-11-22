@@ -1,6 +1,15 @@
-/* eslint-disable comma-dangle */
 /* eslint-disable implicit-arrow-linebreak */
 import { dbConnection } from './connection.js';
+
+const searchSelectedProducts = (userId) =>
+	dbConnection.query(
+		`SELECT products.name
+                FROM users_products
+                JOIN products
+                        ON products.id = users_products.product_id
+                WHERE users_products.user_id = $1; `,
+		[userId]
+	);
 
 const insertSelectedProducts = ({ id, selectedProducts }) => {
 	const valuesQuery = selectedProducts
@@ -14,4 +23,4 @@ const insertSelectedProducts = ({ id, selectedProducts }) => {
         ${valuesQuery};`);
 };
 
-export default insertSelectedProducts;
+export { searchSelectedProducts, insertSelectedProducts };

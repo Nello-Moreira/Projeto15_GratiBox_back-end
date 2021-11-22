@@ -9,6 +9,7 @@ import planOptions from './controllers/planOptions.js';
 import products from './controllers/products.js';
 import states from './controllers/states.js';
 import subscribe from './controllers/subscribe.js';
+import planInformations from './controllers/planInformations.js';
 
 const server = express();
 server.use(cors());
@@ -26,5 +27,7 @@ server.get(products.route, products.getProducts);
 server.get(states.route, states.getStates);
 
 server.post(subscribe.route, subscribe.postSubscription);
+
+server.get(planInformations.route, planInformations.getPlanInformations);
 
 export default server;

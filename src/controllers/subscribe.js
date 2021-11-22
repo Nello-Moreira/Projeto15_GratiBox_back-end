@@ -1,7 +1,7 @@
 import internalErrorResponse from '../helpers/serverError.js';
 import searchPlan from '../data/plansTable.js';
 import { updateUser } from '../data/usersTable.js';
-import insertSelectedProducts from '../data/usersProductsTable.js';
+import { insertSelectedProducts } from '../data/usersProductsTable.js';
 import insertAddress from '../data/addressesTable.js';
 
 const route = '/subscribe';
