@@ -28,13 +28,12 @@ async function postLogin(request, response) {
 		const token = uuid();
 		await insertSession(user.rows[0].id, token);
 
-		return response
-			.status(200)
-			.send({
-				name: user.rows[0].name,
-				token,
-				planType: user.rows[0].planType,
-			});
+		return response.status(200).send({
+			id: user.rows[0].id,
+			name: user.rows[0].name,
+			token,
+			planType: user.rows[0].planType,
+		});
 	} catch (error) {
 		return internalErrorResponse(response, error);
 	}
