@@ -3,9 +3,6 @@ CREATE TABLE "users" (
 	"name" TEXT NOT NULL,
 	"email" TEXT NOT NULL,
 	"password" TEXT NOT NULL,
-	"plan_id" integer DEFAULT '1',
-	"delivery_option_id" integer,
-	"subscription_date" DATE,
 	CONSTRAINT "users_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -38,10 +35,10 @@ CREATE TABLE "states" (
 
 
 
-CREATE TABLE "plans" (
+CREATE TABLE "plan_types" (
 	"id" serial NOT NULL,
 	"type" TEXT NOT NULL UNIQUE,
-	CONSTRAINT "plans_pk" PRIMARY KEY ("id")
+	CONSTRAINT "plan_types_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
@@ -83,7 +80,7 @@ CREATE TABLE "users_products" (
 CREATE TABLE "deliveries" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
-	"date" timestamp with time zone NOT NULL,
+	"date" DATE NOT NULL,
 	CONSTRAINT "deliveries_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -95,8 +92,8 @@ CREATE TABLE "feedbacks" (
 	"id" serial NOT NULL,
 	"delivery_id" integer NOT NULL,
 	"grade_id" integer NOT NULL,
-	"on_time" bool DEFAULT 'TRUE',
-	"liked" bool DEFAULT 'TRUE',
+	"on_time" bool NOT NULL DEFAULT 'TRUE',
+	"liked" bool NOT NULL DEFAULT 'TRUE',
 	"comment" TEXT,
 	CONSTRAINT "feedbacks_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -124,13 +121,29 @@ CREATE TABLE "sessions" (
   OIDS=FALSE
 );
 
-ALTER TABLE "users" ADD CONSTRAINT "users_fk0" FOREIGN KEY ("plan_id") REFERENCES "plans"("id");
-ALTER TABLE "users" ADD CONSTRAINT "users_fk1" FOREIGN KEY ("delivery_option_id") REFERENCES "delivery_options"("id");
+
+
+CREATE TABLE "users_plans" (
+	"id" serial NOT NULL,
+	"user_id" integer NOT NULL,
+	"plan_type_id" integer NOT NULL DEFAULT '1',
+	"delivery_option_id" integer NOT NULL DEFAULT '1',
+	"subscription_date" DATE,
+	CONSTRAINT "users_plans_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
 
 ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk0" FOREIGN KEY ("state_id") REFERENCES "states"("id");
 ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk1" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 
-ALTER TABLE "delivery_options" ADD CONSTRAINT "delivery_options_fk0" FOREIGN KEY ("plan_id") REFERENCES "plans"("id");
+
+
+ALTER TABLE "delivery_options" ADD CONSTRAINT "delivery_options_fk0" FOREIGN KEY ("plan_id") REFERENCES "plan_types"("id");
+
 
 ALTER TABLE "users_products" ADD CONSTRAINT "users_products_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
 ALTER TABLE "users_products" ADD CONSTRAINT "users_products_fk1" FOREIGN KEY ("product_id") REFERENCES "products"("id");
@@ -140,7 +153,12 @@ ALTER TABLE "deliveries" ADD CONSTRAINT "deliveries_fk0" FOREIGN KEY ("user_id")
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk0" FOREIGN KEY ("delivery_id") REFERENCES "deliveries"("id");
 ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_fk1" FOREIGN KEY ("grade_id") REFERENCES "ratings"("id");
 
+
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+
+ALTER TABLE "users_plans" ADD CONSTRAINT "users_plans_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
+ALTER TABLE "users_plans" ADD CONSTRAINT "users_plans_fk1" FOREIGN KEY ("plan_type_id") REFERENCES "plan_types"("id");
+ALTER TABLE "users_plans" ADD CONSTRAINT "users_plans_fk2" FOREIGN KEY ("delivery_option_id") REFERENCES "delivery_options"("id");
 
 INSERT INTO "states" ("name", "initials") VALUES 
 ('Acre', 'AC'),
@@ -186,6 +204,7 @@ INSERT INTO "plans" ("type") VALUES
 ('mensal');
 
 INSERT INTO "delivery_options" ("plan_id", "name") VALUES 
+(1, 'none'),
 (2, 'segunda-feira'),
 (2, 'quarta-feira'),
 (2, 'sexta-feira'),

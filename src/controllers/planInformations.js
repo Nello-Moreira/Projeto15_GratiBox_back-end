@@ -1,5 +1,5 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import { searchPlanInformations } from '../data/usersTable.js';
+import { searchPlanInformations } from '../data/usersPlansTable.js';
 import { searchSelectedProducts } from '../data/usersProductsTable.js';
 
 import calculateNextDeliveries from '../helpers/nextDeliveries.js';
