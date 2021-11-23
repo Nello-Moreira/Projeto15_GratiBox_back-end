@@ -7,8 +7,8 @@ const searchDeliveryOptions = (planType) =>
 	SELECT delivery_options.id, delivery_options.name
 	FROM plans
 	JOIN delivery_options
-		ON plans.id = delivery_options.plan_id
-	WHERE plans.type=$1;`,
+		ON plan_types.id = delivery_options.plan_id
+	WHERE plan_types.type=$1;`,
 		[planType]
 	);
 

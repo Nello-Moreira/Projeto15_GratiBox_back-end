@@ -1,6 +1,7 @@
 import internalErrorResponse from '../helpers/serverError.js';
 import { signUpSchema } from '../validation/schemas.js';
 import { searchUser, insertUser } from '../data/usersTable.js';
+import { insertNewUserPlan } from '../data/usersPlansTable.js';
 import { hashPassword } from '../helpers/passwordEncrypt.js';
 
 const route = '/sign-up';
@@ -19,7 +20,8 @@ async function postSignUp(request, response) {
 			return response.sendStatus(409);
 		}
 		request.body.password = hashPassword(request.body.password);
-		await insertUser(request.body);
+		const userId = Number((await insertUser(request.body)).rows[0].id);
+		await insertNewUserPlan(userId);
 		return response.sendStatus(201);
 	} catch (error) {
 		return internalErrorResponse(response, error);

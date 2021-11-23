@@ -1,17 +1,24 @@
 /* eslint-disable implicit-arrow-linebreak */
 import { dbConnection } from './connection.js';
 
-const searchPlanInformations = (userId) =>
+const searchPlanInformations = (token) =>
 	dbConnection.query(
 		`SELECT
-			users_plans.subscription_date, plans.type, delivery_options.name as delivery_option
+			users.name,
+			plan_types.type as "planType",
+			delivery_options.name as "deliveryOption",
+			users_plans.subscription_date as "subscriptionDate"
 		FROM users
-		JOIN plans
-			ON plans.id = users.plan_id
+		JOIN sessions
+			ON sessions.user_id = users.id
+		JOIN users_plans
+			ON users_plans.user_id = users.id
+		JOIN plan_types
+			ON plan_types.id = users_plans.plan_type_id
 		JOIN delivery_options
-			ON delivery_options.id = users.delivery_option_id
-		WHERE users.id = $1;`,
-		[userId]
+			ON delivery_options.id = users_plans.delivery_option_id
+		WHERE sessions.token = $1;`,
+		[token]
 	);
 
 const insertNewUserPlan = (userId) =>

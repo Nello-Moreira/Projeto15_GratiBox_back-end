@@ -126,8 +126,8 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users_plans" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
-	"plan_type_id" integer NOT NULL DEFAULT '1',
-	"delivery_option_id" integer NOT NULL DEFAULT '1',
+	"plan_type_id" integer NOT NULL DEFAULT 1,
+	"delivery_option_id" integer NOT NULL DEFAULT 1,
 	"subscription_date" DATE,
 	CONSTRAINT "users_plans_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -198,7 +198,7 @@ INSERT INTO "ratings" ("grade") VALUES
 (true),
 (false);
 
-INSERT INTO "plans" ("type") VALUES 
+INSERT INTO "plan_types" ("type") VALUES 
 ('notSubscribed'),
 ('semanal'),
 ('mensal');

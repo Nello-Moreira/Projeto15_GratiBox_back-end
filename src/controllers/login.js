@@ -3,6 +3,7 @@ import internalErrorResponse from '../helpers/serverError.js';
 import { loginSchema } from '../validation/schemas.js';
 import { searchUser } from '../data/usersTable.js';
 import { insertSession } from '../data/sessionsTable.js';
+import { searchPlanInformations } from '../data/usersPlansTable.js';
 import { isCorrectPassword } from '../helpers/passwordEncrypt.js';
 
 const route = '/login';
@@ -27,12 +28,11 @@ async function postLogin(request, response) {
 
 		const token = uuid();
 		await insertSession(user.rows[0].id, token);
+		const planInformations = (await searchPlanInformations(token)).rows[0];
 
 		return response.status(200).send({
-			id: user.rows[0].id,
-			name: user.rows[0].name,
 			token,
-			planType: user.rows[0].planType,
+			...planInformations,
 		});
 	} catch (error) {
 		return internalErrorResponse(response, error);
