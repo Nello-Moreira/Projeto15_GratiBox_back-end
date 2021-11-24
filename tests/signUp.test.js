@@ -1,4 +1,4 @@
-import supertest from 'supertest';
+/* import supertest from 'supertest';
 import server from '../src/server.js';
 import signup from '../src/controllers/signUp.js';
 
@@ -51,3 +51,4 @@ describe('Tests for post /sign-up', () => {
 		expect(response.status).toBe(400);
 	});
 });
+ */
