@@ -11,9 +11,9 @@ const searchSelectedProducts = (userId) =>
 		[userId]
 	);
 
-const insertSelectedProducts = ({ id, selectedProducts }) => {
+const insertSelectedProducts = ({ userId, selectedProducts }) => {
 	const valuesQuery = selectedProducts
-		.map((productId) => `(${id},${productId})`)
+		.map((productId) => `(${userId},${productId})`)
 		.join(', ');
 
 	return dbConnection.query(`

@@ -1,6 +1,6 @@
 import internalErrorResponse from '../helpers/serverError.js';
 import { signUpSchema } from '../validation/schemas.js';
-import { searchUser, insertUser } from '../data/usersTable.js';
+import { searchUserByEmail, insertUser } from '../data/usersTable.js';
 import { insertNewUserPlan } from '../data/usersPlansTable.js';
 import { hashPassword } from '../helpers/passwordEncrypt.js';
 
@@ -14,7 +14,7 @@ async function postSignUp(request, response) {
 	}
 
 	try {
-		const user = await searchUser(request.body.email);
+		const user = await searchUserByEmail(request.body.email);
 
 		if (user.rowCount > 0) {
 			return response.sendStatus(409);

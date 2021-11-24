@@ -26,13 +26,13 @@ const insertNewUserPlan = (userId) =>
 		userId,
 	]);
 
-const updateUserPlan = (token, planId, deliveryOption) =>
+const updateUserPlan = ({ userId, planId, deliveryOption }) =>
 	dbConnection.query(
 		`
         UPDATE users_plans
         SET plan_id = $2, delivery_option_id = $3, subscription_date = NOW()
-        WHERE user_id = (SELECT sessions.user_id FROM sessions WHERE token = $1);`,
-		[token, planId, deliveryOption]
+        WHERE user_id = $1;`,
+		[userId, planId, deliveryOption]
 	);
 
 const deleteAllUsersPlans = () =>

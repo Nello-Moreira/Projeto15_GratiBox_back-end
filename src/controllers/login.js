@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import internalErrorResponse from '../helpers/serverError.js';
 import { loginSchema } from '../validation/schemas.js';
-import { searchUser } from '../data/usersTable.js';
+import { searchUserByEmail } from '../data/usersTable.js';
 import { insertSession } from '../data/sessionsTable.js';
 import { searchPlanInformations } from '../data/usersPlansTable.js';
 import { isCorrectPassword } from '../helpers/passwordEncrypt.js';
@@ -16,7 +16,7 @@ async function postLogin(request, response) {
 	}
 
 	try {
-		const user = await searchUser(request.body.email);
+		const user = await searchUserByEmail(request.body.email);
 
 		if (user.rowCount === 0) {
 			return response.sendStatus(404);

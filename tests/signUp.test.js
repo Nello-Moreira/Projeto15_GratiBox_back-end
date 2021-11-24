@@ -3,7 +3,7 @@ import server from '../src/server.js';
 import signup from '../src/controllers/signUp.js';
 
 import {
-	searchUser,
+	searchUserByEmail,
 	insertUser,
 	deleteAllUsers,
 } from '../src/data/usersTable.js';
@@ -34,7 +34,7 @@ describe('Tests for post /sign-up', () => {
 
 	it('should return 201 for valid body', async () => {
 		const response = await supertest(server).post(signup.route).send(validBody);
-		const user = await searchUser(validBody.email);
+		const user = await searchUserByEmail(validBody.email);
 		expect(response.status).toBe(201);
 		expect(user.rowCount).toBe(1);
 	});
