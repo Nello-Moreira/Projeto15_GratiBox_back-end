@@ -4,12 +4,12 @@ import cors from 'cors';
 
 import tokenMiddleware from './middlewares/tokenMiddleware.js';
 import planOptions from './controllers/planOptions.js';
-import states from './controllers/states.js';
 import subscribe from './controllers/subscribe.js';
 import planInformations from './controllers/planInformations.js';
 
 import userController from './controllers/userController.js';
 import planController from './controllers/planController.js';
+import addressController from './controllers/addressController.js';
 
 const server = express();
 server.use(cors());
@@ -21,7 +21,7 @@ server.post('/login', userController.login);
 
 server.get('/products', planController.getProducts);
 
-server.get(states.route, states.getStates);
+server.get('/states', addressController.getStates);
 
 server.get(planOptions.route, planOptions.getPlanOptions);
 
