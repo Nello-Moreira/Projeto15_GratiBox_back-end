@@ -3,17 +3,16 @@ import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
 import addressRepository from '../src/repositories/addressRepository.js';
 
-import createState from './fakerFactories/state.factory.js';
+import createState from './factories/state.factory.js';
 
 describe('Tests for get /states', () => {
 	const route = '/states';
 	const testState = createState();
-	let insertedStateId;
 
 	beforeAll(async () => {
 		await addressRepository.deleteAllStates();
 		const queryResult = await addressRepository.insertState(testState);
-		insertedStateId = queryResult.rows[0].id;
+		testState.id = queryResult.rows[0].id;
 	});
 
 	afterEach(async () => {
@@ -29,7 +28,7 @@ describe('Tests for get /states', () => {
 		expect(response.status).toBe(200);
 		expect(response.body.length).toBe(1);
 		expect(response.body[0]).toEqual({
-			id: insertedStateId,
+			id: testState.id,
 			name: testState.name,
 			initials: testState.initials,
 		});

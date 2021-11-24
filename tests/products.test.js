@@ -3,15 +3,16 @@ import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
 import planRepository from '../src/repositories/planRepository.js';
 
+import createProduct from './factories/product.factory.js';
+
 describe('Tests for get /products', () => {
 	const route = '/products';
-	const testProductName = 'Chás';
-	let insertedProductId;
+	const testProduct = createProduct();
 
 	beforeAll(async () => {
 		await planRepository.deleteAllProducts();
-		const queryResult = await planRepository.insertProduct(testProductName);
-		insertedProductId = queryResult.rows[0].id;
+		const queryResult = await planRepository.insertProduct(testProduct.name);
+		testProduct.id = queryResult.rows[0].id;
 	});
 
 	afterEach(async () => {
@@ -27,8 +28,8 @@ describe('Tests for get /products', () => {
 		expect(response.status).toBe(200);
 		expect(response.body.length).toBe(1);
 		expect(response.body[0]).toEqual({
-			id: insertedProductId,
-			name: testProductName,
+			id: testProduct.id,
+			name: testProduct.name,
 		});
 	});
 
