@@ -56,4 +56,13 @@ async function updatePlan({
 	}
 }
 
-export default { searchUserPlan, insertPlan, updatePlan };
+async function searchProducts() {
+	try {
+		return await dbConnection.query('SELECT * FROM products;');
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+export default { searchUserPlan, insertPlan, updatePlan, searchProducts };
