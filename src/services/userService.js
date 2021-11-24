@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import userRepository from '../repositories/userRepository.js';
 import { isCorrectPassword, hashPassword } from '../helpers/passwordEncrypt.js';
-import planController from '../controllers/planController.js';
+import planService from './planService.js';
 
 async function authenticate({ email, password }) {
 	const user = await userRepository.searchUserByEmail(email);
@@ -52,7 +52,7 @@ async function registerUser({ name, email, password }) {
 
 	if (!userId) return null;
 
-	const createdNotSubscribedPlan = await planController.setUserPlan({
+	const createdNotSubscribedPlan = await planService.setUserPlan({
 		userId: userId.rows[0].id,
 	});
 

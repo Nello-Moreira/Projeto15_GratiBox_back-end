@@ -1,6 +1,5 @@
 import userService from '../services/userService.js';
 import { isInvalidLogin, isInvalidSignUp } from '../validation/schemas.js';
-import planController from './planController.js';
 
 async function login(request, response) {
 	const loginBody = request.body;
