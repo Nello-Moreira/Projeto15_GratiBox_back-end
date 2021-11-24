@@ -34,6 +34,18 @@ async function deleteAllUsers() {
 	}
 }
 
+async function searchSession({ token }) {
+	try {
+		return await dbConnection.query(
+			'SELECT * FROM sessions WHERE token = $1;',
+			[token]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
 async function insertSession({ userId, token }) {
 	try {
 		await dbConnection.query(
@@ -51,5 +63,6 @@ export default {
 	searchUserByEmail,
 	insertUser,
 	deleteAllUsers,
+	searchSession,
 	insertSession,
 };
