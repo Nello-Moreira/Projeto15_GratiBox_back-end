@@ -8,23 +8,48 @@ async function searchUserByEmail(email) {
 		]);
 	} catch (error) {
 		console.error(error);
-		return false;
+		return null;
+	}
+}
+
+async function insertUser({ name, email, password }) {
+	try {
+		return await dbConnection.query(
+			'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id;',
+			[name, email, password]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function deleteAllUsers() {
+	try {
+		await dbConnection.query('DELETE FROM users');
+		return true;
+	} catch (error) {
+		console.error(error);
+		return null;
 	}
 }
 
 async function insertSession({ userId, token }) {
 	try {
-		return await dbConnection.query(
+		await dbConnection.query(
 			'INSERT INTO sessions (user_id, token) VALUES ($1, $2);',
 			[userId, token]
 		);
+		return true;
 	} catch (error) {
 		console.error(error);
-		return false;
+		return null;
 	}
 }
 
 export default {
 	searchUserByEmail,
+	insertUser,
+	deleteAllUsers,
 	insertSession,
 };

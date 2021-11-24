@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 
 import tokenMiddleware from './middlewares/tokenMiddleware.js';
-import signup from './controllers/signUp.js';
 import planOptions from './controllers/planOptions.js';
 import products from './controllers/products.js';
 import states from './controllers/states.js';
@@ -16,7 +15,7 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
-server.post(signup.route, signup.postSignUp);
+server.post('/sign-up', userController.signUp);
 
 server.post('/login', userController.login);
 
