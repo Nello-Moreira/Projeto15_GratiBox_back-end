@@ -11,6 +11,8 @@ const signUpSchema = Joi.object({
 	password: Joi.string().min(1).required(),
 }).max(3);
 
+const signUpValidation = (input) => signUpSchema.validate(input).error;
+
 const loginSchema = Joi.object({
 	email: Joi.string()
 		.email({
@@ -21,12 +23,18 @@ const loginSchema = Joi.object({
 	password: Joi.string().min(1).required(),
 }).max(2);
 
+const loginValidation = (input) => loginSchema.validate(input).error;
+
 const tokenSchema = Joi.object({
 	token: Joi.string().guid({ version: ['uuidv4'] }),
 }).max(1);
 
-const planTypeSchema = Joi.object({
-	planType: Joi.string().min(1).required(),
+const tokenValidation = (input) => tokenSchema.validate(input).error;
+
+const planIdSchema = Joi.object({
+	planId: Joi.number().integer().greater(1).required(),
 }).max(1);
 
-export { loginSchema, signUpSchema, tokenSchema, planTypeSchema };
+const planIdValidation = (input) => planIdSchema.validate(input).error;
+
+export { signUpValidation, loginValidation, tokenValidation, planIdValidation };
