@@ -26,6 +26,7 @@ async function insertUser({ name, email, password }) {
 
 async function deleteAllUsers() {
 	try {
+		await dbConnection.query('DELETE FROM users_plans');
 		await dbConnection.query('DELETE FROM users');
 		return true;
 	} catch (error) {

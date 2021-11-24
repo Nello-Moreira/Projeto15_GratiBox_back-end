@@ -1,13 +1,7 @@
-/* import supertest from 'supertest';
+import supertest from 'supertest';
 import server from '../src/server.js';
-import signup from '../src/controllers/signUp.js';
-
-import {
-	searchUserByEmail,
-	insertUser,
-	deleteAllUsers,
-} from '../src/repositories/usersTable.js';
 import { endConnection } from '../src/repositories/connection.js';
+import userRepository from '../src/repositories/userRepository.js';
 
 import {
 	validSignUpBodyFactory,
@@ -15,40 +9,38 @@ import {
 } from './fakerFactories/signUpBodyFactory.js';
 
 describe('Tests for post /sign-up', () => {
+	const route = '/sign-up';
 	const validBody = validSignUpBodyFactory();
 	const invalidBody = invalidSignUpBodyFactory();
 
 	beforeAll(async () => {
-		await deleteAllUsers();
+		await userRepository.deleteAllUsers();
 	});
 
 	afterEach(async () => {
-		await deleteAllUsers();
-		await insertUser(validBody);
+		await userRepository.deleteAllUsers();
+		await userRepository.insertUser(validBody);
 	});
 
 	afterAll(async () => {
-		deleteAllUsers();
+		await userRepository.deleteAllUsers();
 		endConnection();
 	});
 
 	it('should return 201 for valid body', async () => {
-		const response = await supertest(server).post(signup.route).send(validBody);
-		const user = await searchUserByEmail(validBody.email);
+		const response = await supertest(server).post(route).send(validBody);
+		const user = await userRepository.searchUserByEmail(validBody.email);
 		expect(response.status).toBe(201);
 		expect(user.rowCount).toBe(1);
 	});
 
-	it('should return 409 for invalid body', async () => {
-		const response = await supertest(server).post(signup.route).send(validBody);
+	it('should return 409 when provided email is already in use', async () => {
+		const response = await supertest(server).post(route).send(validBody);
 		expect(response.status).toBe(409);
 	});
 
 	it('should return 400 for invalid body', async () => {
-		const response = await supertest(server)
-			.post(signup.route)
-			.send(invalidBody);
+		const response = await supertest(server).post(route).send(invalidBody);
 		expect(response.status).toBe(400);
 	});
 });
- */

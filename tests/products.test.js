@@ -4,6 +4,7 @@ import { endConnection } from '../src/repositories/connection.js';
 import planRepository from '../src/repositories/planRepository.js';
 
 describe('Tests for get /products', () => {
+	const route = '/products';
 	const testProductName = 'Chás';
 	let insertedProductId;
 
@@ -22,7 +23,7 @@ describe('Tests for get /products', () => {
 	});
 
 	it('should return 200 when there are products', async () => {
-		const response = await supertest(server).get('/products');
+		const response = await supertest(server).get(route);
 		expect(response.status).toBe(200);
 		expect(response.body.length).toBe(1);
 		expect(response.body[0]).toEqual({
@@ -32,7 +33,7 @@ describe('Tests for get /products', () => {
 	});
 
 	it('should return 204 when there are no products', async () => {
-		const response = await supertest(server).get('/products');
+		const response = await supertest(server).get(route);
 		expect(response.status).toBe(204);
 	});
 });
