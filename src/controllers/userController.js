@@ -1,7 +1,5 @@
-import { v4 as uuid } from 'uuid';
-import userRepository from '../repositories/userRepository.js';
+import userService from '../services/userService.js';
 import { isInvalidLogin, isInvalidSignUp } from '../validation/schemas.js';
-import { isCorrectPassword, hashPassword } from '../helpers/passwordEncrypt.js';
 import planController from './planController.js';
 
 async function login(request, response) {
@@ -12,31 +10,15 @@ async function login(request, response) {
 		return response.status(400).send(invalidLogin.message);
 	}
 
-	const user = await userRepository.searchUserByEmail(loginBody.email);
+	const token = await userService.authenticate(loginBody);
 
-	if (!user) return response.sendStatus(500);
-
-	if (user.rowCount === 0) {
-		return response.sendStatus(404);
+	if (token === null) {
+		return response.sendStatus(500);
 	}
 
-	if (
-		!isCorrectPassword({
-			password: loginBody.password,
-			hashedPassword: user.rows[0].password,
-		})
-	) {
+	if (token === false) {
 		return response.sendStatus(404);
 	}
-
-	const token = uuid();
-
-	const createdSession = await userRepository.insertSession({
-		userId: user.rows[0].id,
-		token,
-	});
-
-	if (!createdSession) return response.sendStatus(500);
 
 	return response.status(200).send({ token });
 }
@@ -49,25 +31,15 @@ async function signUp(request, response) {
 		return response.status(400).send(invalidSignUp.message);
 	}
 
-	const user = await userRepository.searchUserByEmail(signUpBody.email);
+	const user = await userService.registerUser(signUpBody);
 
-	if (!user) return response.sendStatus(500);
-
-	if (user.rowCount !== 0) {
-		return response.sendStatus(409);
+	if (user === null) {
+		return response.sendStatus(500);
 	}
 
-	signUpBody.password = hashPassword(signUpBody.password);
-
-	const userId = await userRepository.insertUser(signUpBody);
-
-	if (!userId) return response.sendStatus(500);
-
-	const createdNotSubscribedPlan = await planController.setUserPlan({
-		userId: userId.rows[0].id,
-	});
-
-	if (!createdNotSubscribedPlan) return response.sendStatus(500);
+	if (user === false) {
+		return response.sendStatus(409);
+	}
 
 	return response.sendStatus(201);
 }
