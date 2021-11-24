@@ -1,5 +1,4 @@
-import { searchSession } from '../repositories/sessionsTable.js';
-import internalErrorResponse from '../helpers/serverError.js';
+import userRepository from '../repositories/userRepository.js';
 import { isInvalidToken } from '../validation/schemas.js';
 
 async function tokenMiddleware(request, response, next) {
@@ -9,20 +8,20 @@ async function tokenMiddleware(request, response, next) {
 	const invalidToken = isInvalidToken({ token });
 
 	if (invalidToken) {
-		return response.status(400).send(invalidToken.message);
+		return response.status(400).send('Invalid token');
 	}
 
-	try {
-		const session = await searchSession(token);
+	const session = await userRepository.searchSession(token);
 
-		if (session.rowCount === 0) {
-			return response.sendStatus(401);
-		}
-
-		return next();
-	} catch (error) {
-		return internalErrorResponse(error);
+	if (!session) {
+		return response.sendStatus(500);
 	}
+
+	if (session.rowCount === 0) {
+		return response.sendStatus(401);
+	}
+
+	return next();
 }
 
 export default tokenMiddleware;

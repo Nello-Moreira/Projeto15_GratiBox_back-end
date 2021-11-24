@@ -3,7 +3,7 @@ import searchPlan from '../repositories/plansTable.js';
 import { updateUserPlan } from '../repositories/usersPlansTable.js';
 import { insertSelectedProducts } from '../repositories/usersProductsTable.js';
 import insertAddress from '../repositories/addressesTable.js';
-import { searchUserByToken } from '../repositories/usersTable.js';
+import userRepository from '../repositories/userRepository.js';
 
 const route = '/subscribe';
 
@@ -15,7 +15,7 @@ async function postSubscription(request, response) {
 	try {
 		const planId = (await searchPlan(planType.toLowerCase())).rows[0].id;
 
-		const userId = await searchUserByToken(token);
+		const userId = await userRepository.searchUserByToken(token);
 
 		await updateUserPlan({
 			userId,

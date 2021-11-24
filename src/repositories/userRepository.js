@@ -47,6 +47,23 @@ async function searchUserByEmail(email) {
 	}
 }
 
+async function searchUserByToken(token) {
+	try {
+		return await dbConnection.query(
+			`
+			SELECT users.id, users.name, users.email
+			FROM users
+			JOIN sessions
+				ON sessions.user_id = users.id
+			WHERE sessions.token = $1 ;`,
+			[token]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
 async function insertUser({ name, email, password }) {
 	try {
 		return await dbConnection.query(
@@ -74,6 +91,7 @@ async function deleteAllUsers() {
 
 export default {
 	searchUserByEmail,
+	searchUserByToken,
 	insertUser,
 	deleteAllUsers,
 	searchSession,
