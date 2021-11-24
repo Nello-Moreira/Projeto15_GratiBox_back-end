@@ -1,5 +1,5 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import searchDeliveryOptions from '../data/deliveryOptionsTable.js';
+import searchDeliveryOptions from '../repositories/deliveryOptionsTable.js';
 
 const route = '/plan-options';
 

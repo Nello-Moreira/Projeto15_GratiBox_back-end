@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import { searchLastDelivery } from '../data/deliveriesTable.js';
+import { searchLastDelivery } from '../repositories/deliveriesTable.js';
 
 async function getLastDeliveryDate(userId, planInformations) {
 	try {

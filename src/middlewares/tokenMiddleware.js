@@ -1,15 +1,15 @@
-import { searchSession } from '../data/sessionsTable.js';
+import { searchSession } from '../repositories/sessionsTable.js';
 import internalErrorResponse from '../helpers/serverError.js';
-import { tokenSchema } from '../validation/schemas.js';
+import { isInvalidToken } from '../validation/schemas.js';
 
 async function tokenMiddleware(request, response, next) {
 	const { authorization } = request.headers;
 	const token = authorization.replace('Bearer ', '');
 
-	const tokenValidationError = tokenSchema.validate({ token }).error;
+	const invalidToken = isInvalidToken({ token });
 
-	if (tokenValidationError) {
-		return response.status(400).send(tokenValidationError.message);
+	if (invalidToken) {
+		return response.status(400).send(invalidToken.message);
 	}
 
 	try {

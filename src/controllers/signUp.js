@@ -1,16 +1,16 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import { signUpSchema } from '../validation/schemas.js';
-import { searchUserByEmail, insertUser } from '../data/usersTable.js';
-import { insertNewUserPlan } from '../data/usersPlansTable.js';
+import { isInvalidSignUp } from '../validation/schemas.js';
+import { searchUserByEmail, insertUser } from '../repositories/usersTable.js';
+import { insertNewUserPlan } from '../repositories/usersPlansTable.js';
 import { hashPassword } from '../helpers/passwordEncrypt.js';
 
 const route = '/sign-up';
 
 async function postSignUp(request, response) {
-	const signUpValidationError = signUpSchema.validate(request.body).error;
+	const invalidSignUp = isInvalidSignUp(request.body);
 
-	if (signUpValidationError) {
-		return response.status(400).send(signUpValidationError.message);
+	if (invalidSignUp) {
+		return response.status(400).send(invalidSignUp.message);
 	}
 
 	try {

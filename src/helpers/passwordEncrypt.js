@@ -5,7 +5,7 @@ function hashPassword(password) {
 	return bcrypt.hashSync(password, salt);
 }
 
-function isCorrectPassword(password, hashedPassword) {
+function isCorrectPassword({ password, hashedPassword }) {
 	return bcrypt.compareSync(password, hashedPassword);
 }
 

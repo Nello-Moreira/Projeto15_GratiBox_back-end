@@ -1,18 +1,18 @@
 import { v4 as uuid } from 'uuid';
 import internalErrorResponse from '../helpers/serverError.js';
-import { loginSchema } from '../validation/schemas.js';
-import { searchUserByEmail } from '../data/usersTable.js';
-import { insertSession } from '../data/sessionsTable.js';
-import { searchPlanInformations } from '../data/usersPlansTable.js';
+import { isInvalidLogin } from '../validation/schemas.js';
+import { searchUserByEmail } from '../repositories/usersTable.js';
+import { insertSession } from '../repositories/sessionsTable.js';
+import { searchPlanInformations } from '../repositories/usersPlansTable.js';
 import { isCorrectPassword } from '../helpers/passwordEncrypt.js';
 
 const route = '/login';
 
 async function postLogin(request, response) {
-	const loginValidationError = loginSchema.validate(request.body).error;
+	const invalidLogin = isInvalidLogin(request.body);
 
-	if (loginValidationError) {
-		return response.status(400).send(loginValidationError.message);
+	if (invalidLogin) {
+		return response.status(400).send(invalidLogin.message);
 	}
 
 	try {
@@ -39,9 +39,4 @@ async function postLogin(request, response) {
 	}
 }
 
-const login = {
-	route,
-	postLogin,
-};
-
-export default login;
+export default { route, postLogin };

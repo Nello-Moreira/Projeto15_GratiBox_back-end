@@ -6,8 +6,8 @@ import {
 	searchUserByEmail,
 	insertUser,
 	deleteAllUsers,
-} from '../src/data/usersTable.js';
-import { endConnection } from '../src/data/connection.js';
+} from '../src/repositories/usersTable.js';
+import { endConnection } from '../src/repositories/connection.js';
 
 import {
 	validSignUpBodyFactory,

@@ -1,5 +1,5 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import searchStates from '../data/statesTable.js';
+import searchStates from '../repositories/statesTable.js';
 
 const route = '/states';
 

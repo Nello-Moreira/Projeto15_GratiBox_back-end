@@ -1,9 +1,9 @@
 import internalErrorResponse from '../helpers/serverError.js';
-import searchPlan from '../data/plansTable.js';
-import { updateUserPlan } from '../data/usersPlansTable.js';
-import { insertSelectedProducts } from '../data/usersProductsTable.js';
-import insertAddress from '../data/addressesTable.js';
-import { searchUserByToken } from '../data/usersTable.js';
+import searchPlan from '../repositories/plansTable.js';
+import { updateUserPlan } from '../repositories/usersPlansTable.js';
+import { insertSelectedProducts } from '../repositories/usersProductsTable.js';
+import insertAddress from '../repositories/addressesTable.js';
+import { searchUserByToken } from '../repositories/usersTable.js';
 
 const route = '/subscribe';
 

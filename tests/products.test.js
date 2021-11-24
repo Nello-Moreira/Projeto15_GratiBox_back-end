@@ -1,12 +1,12 @@
 import supertest from 'supertest';
 import server from '../src/server.js';
 import products from '../src/controllers/products.js';
-import { endConnection } from '../src/data/connection.js';
+import { endConnection } from '../src/repositories/connection.js';
 
 import {
 	insertProducts,
 	deleteAllProducts,
-} from '../src/data/productsTable.js';
+} from '../src/repositories/productsTable.js';
 
 describe('Tests for get /products', () => {
 	beforeAll(async () => {
