@@ -10,6 +10,7 @@ import planInformations from './controllers/planInformations.js';
 import userController from './controllers/userController.js';
 import planController from './controllers/planController.js';
 import addressController from './controllers/addressController.js';
+import productController from './controllers/productController.js';
 
 const server = express();
 server.use(cors());
@@ -19,7 +20,7 @@ server.post('/sign-up', userController.signUp);
 
 server.post('/login', userController.login);
 
-server.get('/products', planController.getProducts);
+server.get('/products', productController.getProducts);
 
 server.get('/states', addressController.getStates);
 

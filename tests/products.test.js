@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
-import planRepository from '../src/repositories/planRepository.js';
+import productRepository from '../src/repositories/productRepository.js';
 
 import createProduct from './factories/product.factory.js';
 
@@ -10,13 +10,13 @@ describe('Tests for get /products', () => {
 	const testProduct = createProduct();
 
 	beforeAll(async () => {
-		await planRepository.deleteAllProducts();
-		const queryResult = await planRepository.insertProduct(testProduct.name);
+		await productRepository.deleteAllProducts();
+		const queryResult = await productRepository.insertProduct(testProduct.name);
 		testProduct.id = queryResult.rows[0].id;
 	});
 
 	afterEach(async () => {
-		await planRepository.deleteAllProducts();
+		await productRepository.deleteAllProducts();
 	});
 
 	afterAll(async () => {

@@ -62,6 +62,7 @@ async function insertUser({ name, email, password }) {
 async function deleteAllUsers() {
 	try {
 		await deleteAllSessions();
+		await dbConnection.query('DELETE FROM users_products;');
 		await dbConnection.query('DELETE FROM users_plans;');
 		await dbConnection.query('DELETE FROM users;');
 		return true;
