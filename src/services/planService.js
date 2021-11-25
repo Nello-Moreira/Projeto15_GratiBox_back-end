@@ -21,8 +21,8 @@ async function setUserPlan({ userId, planId = 1, deliveryOption = 1 }) {
 		return null;
 	}
 
-	if (!plan) {
-		const createdPlan = planRepository.insertPlan({
+	if (plan === false) {
+		const createdPlan = await planRepository.insertPlan({
 			userId,
 			planId,
 			deliveryOption,
@@ -49,5 +49,39 @@ async function setUserPlan({ userId, planId = 1, deliveryOption = 1 }) {
 
 	return true;
 }
+function formatPlanOptions(planOptions) {
+	const formattedPlanOptions = [];
+	let formattedOption;
 
-export default { setUserPlan };
+	planOptions.forEach((option) => {
+		formattedOption = formattedPlanOptions.find(
+			(obj) => obj.planId === option.planId
+		);
+		if (formattedOption) {
+			return formattedOption.deliveryOptions.push(option.deliveryOption);
+		}
+		return formattedPlanOptions.push({
+			planId: option.planId,
+			planType: option.planType,
+			deliveryOptions: [option.deliveryOption],
+		});
+	});
+
+	return formattedPlanOptions;
+}
+
+async function getPlanOptions() {
+	const plans = await planRepository.searchPlanOptions();
+
+	if (!plans) {
+		return null;
+	}
+
+	if (plans.rowCount === 0) {
+		return false;
+	}
+
+	return formatPlanOptions(plans.rows);
+}
+
+export default { setUserPlan, getPlanOptions };

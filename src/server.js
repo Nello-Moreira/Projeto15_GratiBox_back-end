@@ -24,7 +24,7 @@ server.get('/products', productController.getProducts);
 
 server.get('/states', addressController.getStates);
 
-server.get(planOptions.route, planOptions.getPlanOptions);
+server.get('/plan-options', planController.getPlanOptions);
 
 server.use(tokenMiddleware);
 

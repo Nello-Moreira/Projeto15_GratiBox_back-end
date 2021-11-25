@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import { dbConnection } from './connection.js';
 
-async function searchUserPlan(id) {
+async function searchUserPlan(userId) {
 	try {
 		return await dbConnection.query(
 			'SELECT * FROM users_plans WHERE user_id = $1 ;',
-			[id]
+			[userId]
 		);
 	} catch (error) {
 		console.error(error);
@@ -56,8 +56,26 @@ async function updatePlan({
 	}
 }
 
+async function searchPlanOptions() {
+	try {
+		return await dbConnection.query(
+			`SELECT
+				plan_types.id AS "planId",
+				plan_types.type AS "planType",
+				delivery_options.name AS "deliveryOption"
+			FROM plan_types
+			JOIN delivery_options
+				ON delivery_options.plan_id = plan_types.id;`
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
 export default {
 	searchUserPlan,
 	insertPlan,
 	updatePlan,
+	searchPlanOptions,
 };
