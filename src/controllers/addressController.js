@@ -1,4 +1,4 @@
-import addressRepository from '../repositories/addressRepository';
+import addressRepository from '../repositories/addressRepository.js';
 
 async function getStates(request, response) {
 	const stateOptions = await addressRepository.searchStates();

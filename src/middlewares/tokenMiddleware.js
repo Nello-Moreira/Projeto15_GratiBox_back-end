@@ -21,6 +21,8 @@ async function tokenMiddleware(request, response, next) {
 		return response.sendStatus(401);
 	}
 
+	request.locals = { userId: session.rows[0].userId };
+
 	return next();
 }
 

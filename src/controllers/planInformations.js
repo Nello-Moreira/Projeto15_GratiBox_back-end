@@ -7,7 +7,7 @@ import calculateNextDeliveries from '../helpers/nextDeliveries.js';
 const route = '/plan-informations';
 
 async function getPlanInformations(request, response) {
-	const { userId } = request.query;
+	const { userId } = request.locals;
 
 	try {
 		const planInformationsQuery = await searchPlanInformations(userId);

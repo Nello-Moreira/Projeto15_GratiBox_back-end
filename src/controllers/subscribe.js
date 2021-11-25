@@ -8,14 +8,11 @@ import userRepository from '../repositories/userRepository.js';
 const route = '/subscribe';
 
 async function postSubscription(request, response) {
-	const { authorization } = request.headers;
-	const token = authorization.replace('Bearer ', '');
+	const { userId } = request.locals;
 	const { planType, deliveryOption, selectedProducts, address } = request.body;
 
 	try {
 		const planId = (await searchPlan(planType.toLowerCase())).rows[0].id;
-
-		const userId = await userRepository.searchUserByToken(token);
 
 		await updateUserPlan({
 			userId,

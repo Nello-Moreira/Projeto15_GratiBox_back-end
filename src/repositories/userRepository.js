@@ -4,7 +4,7 @@ import { dbConnection } from './connection.js';
 async function searchSession(token) {
 	try {
 		return await dbConnection.query(
-			'SELECT * FROM sessions WHERE token = $1;',
+			'SELECT user_id AS "userId" FROM sessions WHERE token = $1;',
 			[token]
 		);
 	} catch (error) {
