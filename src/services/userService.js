@@ -1,10 +1,12 @@
 import { v4 as uuid } from 'uuid';
 import userRepository from '../repositories/userRepository.js';
 import { isCorrectPassword, hashPassword } from '../helpers/passwordEncrypt.js';
-import planService from './planService.js';
 
 async function authenticate({ email, password }) {
-	const user = await userRepository.searchUserByEmail(email);
+	const user = await userRepository.searchUserByParam({
+		param: 'email',
+		value: email,
+	});
 
 	if (!user) return null;
 
@@ -34,7 +36,10 @@ async function authenticate({ email, password }) {
 }
 
 async function registerUser({ name, email, password }) {
-	const user = await userRepository.searchUserByEmail(email);
+	const user = await userRepository.searchUserByParam({
+		param: 'email',
+		value: email,
+	});
 
 	if (!user) return null;
 
@@ -51,12 +56,6 @@ async function registerUser({ name, email, password }) {
 	});
 
 	if (!userId) return null;
-
-	const createdNotSubscribedPlan = await planService.setUserPlan({
-		userId: userId.rows[0].id,
-	});
-
-	if (!createdNotSubscribedPlan) return null;
 
 	return true;
 }

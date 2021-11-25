@@ -36,11 +36,12 @@ async function deleteAllSessions() {
 	}
 }
 
-async function searchUserByEmail(email) {
+async function searchUserByParam({ param, value }) {
 	try {
-		return await dbConnection.query('SELECT * FROM users WHERE email = $1 ;', [
-			email,
-		]);
+		return await dbConnection.query(
+			`SELECT * FROM users WHERE ${param} = $1 ;`,
+			[value]
+		);
 	} catch (error) {
 		console.error(error);
 		return null;
@@ -90,7 +91,7 @@ async function deleteAllUsers() {
 }
 
 export default {
-	searchUserByEmail,
+	searchUserByParam,
 	searchUserByToken,
 	insertUser,
 	deleteAllUsers,

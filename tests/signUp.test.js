@@ -30,7 +30,10 @@ describe('Tests for post /sign-up', () => {
 
 	it('should return 201 for valid body', async () => {
 		const response = await supertest(server).post(route).send(validBody);
-		const insertedUser = await userRepository.searchUserByEmail(user.email);
+		const insertedUser = await userRepository.searchUserByParam({
+			param: 'email',
+			value: user.email,
+		});
 
 		expect(response.status).toBe(201);
 		expect(insertedUser.rowCount).toBe(1);

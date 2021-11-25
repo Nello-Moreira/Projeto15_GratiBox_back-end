@@ -92,8 +92,8 @@ CREATE TABLE "feedbacks" (
 	"id" serial NOT NULL,
 	"delivery_id" integer NOT NULL,
 	"grade_id" integer NOT NULL,
-	"on_time" bool NOT NULL DEFAULT 'TRUE',
-	"liked" bool NOT NULL DEFAULT 'TRUE',
+	"on_time" bool NOT NULL,
+	"liked" bool NOT NULL,
 	"comment" TEXT,
 	CONSTRAINT "feedbacks_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -126,9 +126,9 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users_plans" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
-	"plan_id" integer NOT NULL DEFAULT 1,
-	"delivery_option_id" integer NOT NULL DEFAULT 1,
-	"subscription_date" DATE,
+	"plan_id" integer NOT NULL,
+	"delivery_option_id" integer NOT NULL,
+	"subscription_date" DATE NOT NULL,
 	CONSTRAINT "users_plans_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -199,15 +199,13 @@ INSERT INTO "ratings" ("grade") VALUES
 (false);
 
 INSERT INTO "plan_types" ("type") VALUES 
-('notSubscribed'),
 ('semanal'),
 ('mensal');
 
 INSERT INTO "delivery_options" ("plan_id", "name") VALUES 
-(1, 'none'),
-(2, 'segunda-feira'),
-(2, 'quarta-feira'),
-(2, 'sexta-feira'),
-(3, '1'),
-(3, '10'),
-(3, '20');
+(1, 'segunda-feira'),
+(1, 'quarta-feira'),
+(1, 'sexta-feira'),
+(2, '1'),
+(2, '10'),
+(2, '20');
