@@ -1,4 +1,5 @@
 import faker from 'faker';
+import { v4 as uuid } from 'uuid';
 
 function createNewUser(existingUser = false) {
 	let name = faker.name.firstName();
@@ -14,6 +15,7 @@ function createNewUser(existingUser = false) {
 		name,
 		email: faker.internet.email(name),
 		password: faker.internet.password(5),
+		token: uuid(),
 	};
 }
 
