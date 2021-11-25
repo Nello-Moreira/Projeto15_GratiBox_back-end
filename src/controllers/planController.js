@@ -17,7 +17,9 @@ async function getPlanOptions(request, response) {
 async function getUserPlanInformations(request, response) {
 	const { userId } = request.locals;
 
-	const planInformations = await planService.getUserPlanInformations(userId);
+	const planInformations = await planService.getUserPlanInformations({
+		userId,
+	});
 
 	if (planInformations === null) {
 		return response.sendStatus(500);

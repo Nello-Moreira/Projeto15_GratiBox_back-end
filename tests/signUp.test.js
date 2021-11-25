@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
-import userRepository from '../src/repositories/userRepository.js';
+import testRepository from './testRepository/testRepository.js';
 
 import userFactory from './factories/user.factory.js';
 
@@ -15,22 +15,22 @@ describe('Tests for post /sign-up', () => {
 	};
 
 	beforeAll(async () => {
-		await userRepository.deleteAllUsers();
+		await testRepository.deleteAllUsers();
 	});
 
 	afterEach(async () => {
-		await userRepository.deleteAllUsers();
-		await userRepository.insertUser(validBody);
+		await testRepository.deleteAllUsers();
+		await testRepository.insertUser(validBody);
 	});
 
 	afterAll(async () => {
-		await userRepository.deleteAllUsers();
+		await testRepository.deleteAllUsers();
 		endConnection();
 	});
 
 	it('should return 201 for valid body', async () => {
 		const response = await supertest(server).post(route).send(validBody);
-		const insertedUser = await userRepository.searchUserByParam({
+		const insertedUser = await testRepository.searchUserByParam({
 			param: 'email',
 			value: user.email,
 		});

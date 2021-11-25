@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { dbConnection } from './connection.js';
 
-async function searchUserPlanType(userId) {
+async function searchUserPlanType({ userId }) {
 	try {
 		return await dbConnection.query(
 			'SELECT * FROM users_plans WHERE user_id = $1 ;',
@@ -13,7 +13,7 @@ async function searchUserPlanType(userId) {
 	}
 }
 
-async function searchUserPlanInformations(userId) {
+async function searchUserPlanInformations({ userId }) {
 	try {
 		return dbConnection.query(
 			`
@@ -36,7 +36,7 @@ async function searchUserPlanInformations(userId) {
 	}
 }
 
-async function searchLastDeliveryDate(userId) {
+async function searchLastDeliveryDate({ userId }) {
 	try {
 		return dbConnection.query(
 			'SELECT date FROM deliveries WHERE user_id = $1 ORDER BY id DESC LIMIT 1;',
@@ -69,28 +69,6 @@ async function insertUserPlan({
 	}
 }
 
-async function updatePlan({
-	userId,
-	planId,
-	deliveryOption,
-	subscriptionDate,
-}) {
-	try {
-		await dbConnection.query(
-			`
-            UPDATE users_plans
-            SET
-                plan_id = $2, delivery_option_id = $3, subscription_date = $4
-            WHERE user_id = $1;`,
-			[userId, planId, deliveryOption, subscriptionDate]
-		);
-		return true;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-}
-
 async function searchPlanOptions() {
 	try {
 		return await dbConnection.query(
@@ -109,57 +87,10 @@ async function searchPlanOptions() {
 	}
 }
 
-async function deleteAllPlanOptions() {
-	try {
-		await dbConnection.query('DELETE FROM delivery_options;');
-		await dbConnection.query('DELETE FROM plan_types;');
-		return true;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-}
-
-async function insertPlanType(type) {
-	try {
-		return await dbConnection.query(
-			`INSERT INTO plan_types
-                (type)
-            VALUES
-                ($1)
-			RETURNING id;`,
-			[type]
-		);
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-}
-
-async function insertDeliveryOptions({ planId, optionName }) {
-	try {
-		return await dbConnection.query(
-			`INSERT INTO delivery_options
-                (plan_id, name)
-            VALUES
-                ($1, $2)
-			RETURNING id;`,
-			[planId, optionName]
-		);
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-}
-
 export default {
 	searchUserPlanType,
 	searchUserPlanInformations,
 	searchLastDeliveryDate,
 	searchPlanOptions,
 	insertUserPlan,
-	insertPlanType,
-	insertDeliveryOptions,
-	updatePlan,
-	deleteAllPlanOptions,
 };

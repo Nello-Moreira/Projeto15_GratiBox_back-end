@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
-import planRepository from '../src/repositories/planRepository.js';
+import testRepository from './testRepository/testRepository.js';
 
 import planFactory from './factories/plan.factory.js';
 
@@ -11,12 +11,14 @@ describe('Tests for get /plan-options', () => {
 	let testDeliveryOption;
 
 	beforeAll(async () => {
-		await planRepository.deleteAllPlanOptions();
-		const queryResult = await planRepository.insertPlanType(testPlan.type);
+		await testRepository.deleteAllPlanOptions();
+		const queryResult = await testRepository.insertPlanType({
+			type: testPlan.type,
+		});
 		testPlan.id = queryResult.rows[0].id;
 
 		testDeliveryOption = planFactory.createDeliveryOption(testPlan.id);
-		const optionId = await planRepository.insertDeliveryOptions({
+		const optionId = await testRepository.insertDeliveryOptions({
 			planId: testDeliveryOption.planId,
 			optionName: testDeliveryOption.name,
 		});
@@ -24,7 +26,7 @@ describe('Tests for get /plan-options', () => {
 	});
 
 	afterEach(async () => {
-		await planRepository.deleteAllPlanOptions();
+		await testRepository.deleteAllPlanOptions();
 	});
 
 	afterAll(async () => {

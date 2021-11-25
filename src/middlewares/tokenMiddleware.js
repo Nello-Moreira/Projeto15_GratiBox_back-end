@@ -11,7 +11,7 @@ async function tokenMiddleware(request, response, next) {
 		return response.status(400).send('Invalid token');
 	}
 
-	const session = await userRepository.searchSession(token);
+	const session = await userRepository.searchSession({ token });
 
 	if (!session) {
 		return response.sendStatus(500);

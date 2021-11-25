@@ -2,8 +2,8 @@ import planRepository from '../repositories/planRepository.js';
 import productService from './productService.js';
 import calculateNextDeliveries from '../helpers/nextDeliveries.js';
 
-async function isRegisteredUser(userId) {
-	const plan = await planRepository.searchUserPlanType(userId);
+async function isRegisteredUser({ userId }) {
+	const plan = await planRepository.searchUserPlanType({ userId });
 
 	if (!plan) {
 		return null;
@@ -17,7 +17,7 @@ async function isRegisteredUser(userId) {
 }
 
 async function setUserPlan({ userId, planId, deliveryOption }) {
-	const plan = await isRegisteredUser(userId);
+	const plan = await isRegisteredUser({ userId });
 
 	if (plan === null) {
 		return null;
@@ -41,7 +41,7 @@ async function setUserPlan({ userId, planId, deliveryOption }) {
 	return true;
 }
 
-function formatPlanOptions(planOptions) {
+function formatPlanOptions({ planOptions }) {
 	const formattedPlanOptions = [];
 	let formattedOption;
 
@@ -81,11 +81,11 @@ async function getPlanOptions() {
 		return false;
 	}
 
-	return formatPlanOptions(plans.rows);
+	return formatPlanOptions({ planOptions: plans.rows });
 }
 
-async function getLastDeliveryDate(userId) {
-	const deliveryDate = await planRepository.searchLastDeliveryDate(userId);
+async function getLastDeliveryDate({ userId }) {
+	const deliveryDate = await planRepository.searchLastDeliveryDate({ userId });
 
 	if (deliveryDate === null) {
 		return null;
@@ -98,10 +98,10 @@ async function getLastDeliveryDate(userId) {
 	return deliveryDate.rows[0].date;
 }
 
-async function getUserPlanInformations(userId) {
-	const planInformations = await planRepository.searchUserPlanInformations(
-		userId
-	);
+async function getUserPlanInformations({ userId }) {
+	const planInformations = await planRepository.searchUserPlanInformations({
+		userId,
+	});
 
 	if (!planInformations) {
 		return null;
@@ -111,7 +111,7 @@ async function getUserPlanInformations(userId) {
 		return false;
 	}
 
-	const productsList = await productService.getUserProductsList(userId);
+	const productsList = await productService.getUserProductsList({ userId });
 
 	if (!productsList) {
 		return null;
@@ -119,7 +119,7 @@ async function getUserPlanInformations(userId) {
 
 	const lastDeliveryDate = new Date(
 		// eslint-disable-next-line operator-linebreak
-		(await getLastDeliveryDate(userId)) ||
+		(await getLastDeliveryDate({ userId })) ||
 			planInformations.rows[0].subscriptionDate
 	);
 
