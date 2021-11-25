@@ -22,7 +22,7 @@ async function setUserPlan({ userId, planId = 1, deliveryOption = 1 }) {
 	}
 
 	if (plan === false) {
-		const createdPlan = await planRepository.insertPlan({
+		const createdPlan = await planRepository.insertUserPlan({
 			userId,
 			planId,
 			deliveryOption,
@@ -58,12 +58,20 @@ function formatPlanOptions(planOptions) {
 			(obj) => obj.planId === option.planId
 		);
 		if (formattedOption) {
-			return formattedOption.deliveryOptions.push(option.deliveryOption);
+			return formattedOption.deliveryOptions.push({
+				id: option.deliveryOptionId,
+				name: option.deliveryOption,
+			});
 		}
 		return formattedPlanOptions.push({
 			planId: option.planId,
 			planType: option.planType,
-			deliveryOptions: [option.deliveryOption],
+			deliveryOptions: [
+				{
+					id: option.deliveryOptionId,
+					name: option.deliveryOption,
+				},
+			],
 		});
 	});
 

@@ -13,7 +13,7 @@ async function searchUserPlan(userId) {
 	}
 }
 
-async function insertPlan({
+async function insertUserPlan({
 	userId,
 	planId,
 	deliveryOption,
@@ -22,7 +22,7 @@ async function insertPlan({
 	try {
 		await dbConnection.query(
 			`INSERT INTO users_plans
-                (user_id, plan_type_id, delivery_option_id, subscription_date)
+                (user_id, plan_id, delivery_option_id, subscription_date)
             VALUES
                 ($1, $2, $3, $4);`,
 			[userId, planId, deliveryOption, subscriptionDate]
@@ -62,6 +62,7 @@ async function searchPlanOptions() {
 			`SELECT
 				plan_types.id AS "planId",
 				plan_types.type AS "planType",
+				delivery_options.id AS "deliveryOptionId",
 				delivery_options.name AS "deliveryOption"
 			FROM plan_types
 			JOIN delivery_options
@@ -73,9 +74,55 @@ async function searchPlanOptions() {
 	}
 }
 
+async function deleteAllPlanOptions() {
+	try {
+		await dbConnection.query('DELETE FROM delivery_options;');
+		await dbConnection.query('DELETE FROM plan_types;');
+		return true;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function insertPlanType(type) {
+	try {
+		return await dbConnection.query(
+			`INSERT INTO plan_types
+                (type)
+            VALUES
+                ($1)
+			RETURNING id;`,
+			[type]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function insertDeliveryOptions({ planId, optionName }) {
+	try {
+		return await dbConnection.query(
+			`INSERT INTO delivery_options
+                (plan_id, name)
+            VALUES
+                ($1, $2)
+			RETURNING id;`,
+			[planId, optionName]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
 export default {
 	searchUserPlan,
-	insertPlan,
+	insertUserPlan,
 	updatePlan,
 	searchPlanOptions,
+	deleteAllPlanOptions,
+	insertPlanType,
+	insertDeliveryOptions,
 };

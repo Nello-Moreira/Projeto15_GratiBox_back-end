@@ -126,7 +126,7 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users_plans" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
-	"plan_type_id" integer NOT NULL DEFAULT 1,
+	"plan_id" integer NOT NULL DEFAULT 1,
 	"delivery_option_id" integer NOT NULL DEFAULT 1,
 	"subscription_date" DATE,
 	CONSTRAINT "users_plans_pk" PRIMARY KEY ("id")

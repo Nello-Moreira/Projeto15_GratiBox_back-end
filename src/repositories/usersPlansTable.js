@@ -14,7 +14,7 @@ const searchPlanInformations = (token) =>
 		JOIN users_plans
 			ON users_plans.user_id = users.id
 		JOIN plan_types
-			ON plan_types.id = users_plans.plan_type_id
+			ON plan_types.id = users_plans.plan_id
 		JOIN delivery_options
 			ON delivery_options.id = users_plans.delivery_option_id
 		WHERE sessions.token = $1;`,
