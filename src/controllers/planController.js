@@ -14,4 +14,20 @@ async function getPlanOptions(request, response) {
 	return response.status(200).send(planOptions);
 }
 
-export default { getPlanOptions };
+async function getUserPlanInformations(request, response) {
+	const { userId } = request.locals;
+
+	const planInformations = await planService.getUserPlanInformations(userId);
+
+	if (planInformations === null) {
+		return response.sendStatus(500);
+	}
+
+	if (planInformations === false) {
+		return response.sendStatus(204);
+	}
+
+	return response.status(200).send(planInformations);
+}
+
+export default { getPlanOptions, getUserPlanInformations };

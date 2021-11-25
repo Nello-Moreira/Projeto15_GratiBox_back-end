@@ -1,7 +1,9 @@
 import planRepository from '../repositories/planRepository.js';
+import productService from './productService.js';
+import calculateNextDeliveries from '../helpers/nextDeliveries.js';
 
 async function isRegisteredUser(userId) {
-	const plan = await planRepository.searchUserPlan(userId);
+	const plan = await planRepository.searchUserPlanType(userId);
 
 	if (!plan) {
 		return null;
@@ -14,41 +16,31 @@ async function isRegisteredUser(userId) {
 	return true;
 }
 
-async function setUserPlan({ userId, planId = 1, deliveryOption = 1 }) {
+async function setUserPlan({ userId, planId, deliveryOption }) {
 	const plan = await isRegisteredUser(userId);
 
 	if (plan === null) {
 		return null;
 	}
 
-	if (plan === false) {
-		const createdPlan = await planRepository.insertUserPlan({
-			userId,
-			planId,
-			deliveryOption,
-			subscriptionDate: null,
-		});
-
-		if (!createdPlan) {
-			return null;
-		}
-
-		return true;
+	if (plan === true) {
+		return false;
 	}
 
-	const upatedPlan = planRepository.updatePlan({
+	const createdPlan = await planRepository.insertUserPlan({
 		userId,
 		planId,
 		deliveryOption,
 		subscriptionDate: new Date(),
 	});
 
-	if (!upatedPlan) {
+	if (!createdPlan) {
 		return null;
 	}
 
 	return true;
 }
+
 function formatPlanOptions(planOptions) {
 	const formattedPlanOptions = [];
 	let formattedOption;
@@ -92,4 +84,57 @@ async function getPlanOptions() {
 	return formatPlanOptions(plans.rows);
 }
 
-export default { setUserPlan, getPlanOptions };
+async function getLastDeliveryDate(userId) {
+	const deliveryDate = await planRepository.searchLastDeliveryDate(userId);
+
+	if (deliveryDate === null) {
+		return null;
+	}
+
+	if (deliveryDate.rowCount === 0) {
+		return false;
+	}
+
+	return deliveryDate.rows[0].date;
+}
+
+async function getUserPlanInformations(userId) {
+	const planInformations = await planRepository.searchUserPlanInformations(
+		userId
+	);
+
+	if (!planInformations) {
+		return null;
+	}
+
+	if (planInformations.rowCount === 0) {
+		return false;
+	}
+
+	const productsList = await productService.getUserProductsList(userId);
+
+	if (!productsList) {
+		return null;
+	}
+
+	const lastDeliveryDate = new Date(
+		// eslint-disable-next-line operator-linebreak
+		(await getLastDeliveryDate(userId)) ||
+			planInformations.rows[0].subscriptionDate
+	);
+
+	const nextDeliveries = calculateNextDeliveries({
+		planType: planInformations.rows[0].planType,
+		deliveryOption: planInformations.rows[0].deliveryOption,
+		lastDeliveryDate,
+	});
+
+	return {
+		planType: planInformations.rows[0].planType,
+		subscriptionDate: planInformations.rows[0].subscriptionDate,
+		productsList,
+		nextDeliveries,
+	};
+}
+
+export default { setUserPlan, getPlanOptions, getUserPlanInformations };

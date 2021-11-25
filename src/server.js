@@ -4,7 +4,6 @@ import cors from 'cors';
 
 import tokenMiddleware from './middlewares/tokenMiddleware.js';
 import subscribe from './controllers/subscribe.js';
-import planInformations from './controllers/planInformations.js';
 
 import userController from './controllers/userController.js';
 import planController from './controllers/planController.js';
@@ -29,6 +28,6 @@ server.use(tokenMiddleware);
 
 server.post(subscribe.route, subscribe.postSubscription);
 
-server.get(planInformations.route, planInformations.getPlanInformations);
+server.get('/plan-informations', planController.getUserPlanInformations);
 
 export default server;

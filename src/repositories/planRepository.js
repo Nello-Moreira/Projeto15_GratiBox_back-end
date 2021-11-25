@@ -1,10 +1,45 @@
 /* eslint-disable no-console */
 import { dbConnection } from './connection.js';
 
-async function searchUserPlan(userId) {
+async function searchUserPlanType(userId) {
 	try {
 		return await dbConnection.query(
 			'SELECT * FROM users_plans WHERE user_id = $1 ;',
+			[userId]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function searchUserPlanInformations(userId) {
+	try {
+		return dbConnection.query(
+			`
+			SELECT
+				plan_types.type as "planType",
+				users_plans.subscription_date as "subscriptionDate",
+				delivery_options.name as "deliveryOption"
+			FROM users_plans
+			JOIN plan_types
+				ON plan_types.id = users_plans.plan_id
+			JOIN delivery_options
+				ON delivery_options.id = users_plans.delivery_option_id
+			WHERE users_plans.user_id = $1 ;
+			`,
+			[userId]
+		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function searchLastDeliveryDate(userId) {
+	try {
+		return dbConnection.query(
+			'SELECT date FROM deliveries WHERE user_id = $1 ORDER BY id DESC LIMIT 1;',
 			[userId]
 		);
 	} catch (error) {
@@ -118,11 +153,13 @@ async function insertDeliveryOptions({ planId, optionName }) {
 }
 
 export default {
-	searchUserPlan,
-	insertUserPlan,
-	updatePlan,
+	searchUserPlanType,
+	searchUserPlanInformations,
+	searchLastDeliveryDate,
 	searchPlanOptions,
-	deleteAllPlanOptions,
+	insertUserPlan,
 	insertPlanType,
 	insertDeliveryOptions,
+	updatePlan,
+	deleteAllPlanOptions,
 };

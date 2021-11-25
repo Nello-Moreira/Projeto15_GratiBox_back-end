@@ -1,19 +1,4 @@
 /* eslint-disable no-continue */
-import { searchLastDelivery } from '../repositories/deliveriesTable.js';
-
-async function getLastDeliveryDate(userId, planInformations) {
-	try {
-		const lastDeliveryQuery = await searchLastDelivery(userId);
-
-		if (lastDeliveryQuery.rowCount === 0) {
-			return new Date(planInformations.subscription_date);
-		}
-		return new Date(lastDeliveryQuery.rows[0].date);
-	} catch (error) {
-		return error;
-	}
-}
-
 function getNextDay(previousDate) {
 	return new Date(previousDate.setDate(previousDate.getDate() + 1));
 }
@@ -26,17 +11,16 @@ function getNextMonthFirstDay(previousDate) {
 	return nextMonthDate;
 }
 
-function calculateWeeklyDeliveries(
+function calculateWeeklyDeliveries({
 	deliveryOption,
-	lastDate,
-	nextDeliveryDatesCount
-) {
+	lastDeliveryDate,
+	nextDeliveryDatesCount,
+}) {
 	const nextDeliveries = [];
 	const options = { weekday: 'long' };
 	let dateString;
 
-	let nextDate = getNextDay(lastDate);
-
+	let nextDate = getNextDay(lastDeliveryDate);
 	while (nextDeliveries.length < nextDeliveryDatesCount) {
 		dateString = nextDate.toLocaleDateString('pt-BR', options);
 
@@ -46,14 +30,15 @@ function calculateWeeklyDeliveries(
 
 		nextDate = getNextDay(new Date(nextDate));
 	}
+
 	return nextDeliveries;
 }
 
-function calculateMonthlyDeliveries(
+function calculateMonthlyDeliveries({
 	deliveryOption,
-	lastDate,
-	nextDeliveryDatesCount
-) {
+	lastDeliveryDate,
+	nextDeliveryDatesCount,
+}) {
 	const nextDeliveries = [];
 	const options = {
 		weekday: 'long',
@@ -62,7 +47,7 @@ function calculateMonthlyDeliveries(
 	let nextDate;
 
 	while (nextDeliveries.length < nextDeliveryDatesCount) {
-		nextDate = getNextMonthFirstDay(lastDate);
+		nextDate = getNextMonthFirstDay(lastDeliveryDate);
 
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
@@ -93,33 +78,29 @@ function calculateMonthlyDeliveries(
 	return nextDeliveries;
 }
 
-export default async function calculateNextDeliveries(
-	userId,
-	planInformations
-) {
+export default function calculateNextDeliveries({
+	planType,
+	deliveryOption,
+	lastDeliveryDate,
+}) {
 	const nextDeliveryDatesCount = 3;
-	const deliveryOption = planInformations.delivery_option;
 
-	try {
-		const lastDeliveryDate = await getLastDeliveryDate(
-			userId,
-			planInformations
-		);
-
-		if (planInformations.type === 'semanal') {
-			return calculateWeeklyDeliveries(
-				deliveryOption,
-				lastDeliveryDate,
-				nextDeliveryDatesCount
-			);
-		}
-
-		return calculateMonthlyDeliveries(
-			Number(deliveryOption),
+	if (planType === 'semanal') {
+		return calculateWeeklyDeliveries({
+			deliveryOption,
 			lastDeliveryDate,
-			nextDeliveryDatesCount
-		);
-	} catch (error) {
-		return error;
+			nextDeliveryDatesCount,
+		});
 	}
+
+	console.log({
+		planType,
+		deliveryOption,
+		lastDeliveryDate,
+	});
+	return calculateMonthlyDeliveries({
+		deliveryOption: Number(deliveryOption),
+		lastDeliveryDate,
+		nextDeliveryDatesCount,
+	});
 }
