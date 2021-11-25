@@ -30,7 +30,7 @@ async function authenticate({ email, password }) {
 
 	if (!createdSession) return null;
 
-	return token;
+	return { username: user.rows[0].name, token };
 }
 
 async function registerUser({ name, email, password }) {

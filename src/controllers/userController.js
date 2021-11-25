@@ -9,17 +9,17 @@ async function login(request, response) {
 		return response.status(400).send(invalidLogin.message);
 	}
 
-	const token = await userService.authenticate(loginBody);
+	const user = await userService.authenticate(loginBody);
 
-	if (token === null) {
+	if (user === null) {
 		return response.sendStatus(500);
 	}
 
-	if (token === false) {
+	if (user === false) {
 		return response.sendStatus(404);
 	}
 
-	return response.status(200).send({ token });
+	return response.status(200).send(user);
 }
 
 async function signUp(request, response) {

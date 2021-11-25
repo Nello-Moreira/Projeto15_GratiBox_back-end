@@ -37,6 +37,7 @@ describe('Tests for post /login', () => {
 		const session = await userRepository.searchSession(response.body.token);
 
 		expect(response.status).toBe(200);
+		expect(response.body).toHaveProperty('username');
 		expect(response.body).toHaveProperty('token');
 		expect(session.rowCount).toBe(1);
 	});
