@@ -3,11 +3,11 @@ import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
 import testRepository from './testRepository/testRepository.js';
 
-import createProduct from './factories/product.factory.js';
+import productFactory from './factories/product.factory.js';
 
 describe('Tests for get /products', () => {
 	const route = '/products';
-	const testProduct = createProduct();
+	const testProduct = productFactory.createProduct();
 
 	beforeAll(async () => {
 		await testRepository.deleteAllProducts();

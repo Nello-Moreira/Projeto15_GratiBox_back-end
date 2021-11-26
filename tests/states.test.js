@@ -3,11 +3,11 @@ import server from '../src/server.js';
 import { endConnection } from '../src/repositories/connection.js';
 import testRepository from './testRepository/testRepository.js';
 
-import createState from './factories/state.factory.js';
+import stateFactory from './factories/state.factory.js';
 
 describe('Tests for get /states', () => {
 	const route = '/states';
-	const testState = createState();
+	const testState = stateFactory.createState();
 
 	beforeAll(async () => {
 		await testRepository.deleteAllStates();
