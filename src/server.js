@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 
 import tokenMiddleware from './middlewares/tokenMiddleware.js';
-import subscribe from './controllers/subscribe.js';
 
 import userController from './controllers/userController.js';
 import planController from './controllers/planController.js';
