@@ -7,19 +7,19 @@ import planFactory from './factories/plan.factory.js';
 
 describe('Tests for get /plan-options', () => {
 	const route = '/plan-options';
-	const testPlan = planFactory.createPlanType();
+	const testPlanType = planFactory.createPlanType();
 	let testDeliveryOption;
 
 	beforeAll(async () => {
 		await testRepository.deleteAllPlanOptions();
 		const queryResult = await testRepository.insertPlanType({
-			type: testPlan.type,
+			type: testPlanType.type,
 		});
-		testPlan.id = queryResult.rows[0].id;
+		testPlanType.id = queryResult.rows[0].id;
 
-		testDeliveryOption = planFactory.createDeliveryOption(testPlan.id);
+		testDeliveryOption = planFactory.createDeliveryOption(testPlanType.id);
 		const optionId = await testRepository.insertDeliveryOptions({
-			planId: testDeliveryOption.planId,
+			planTypeId: testDeliveryOption.planTypeId,
 			optionName: testDeliveryOption.name,
 		});
 		testDeliveryOption.id = optionId.rows[0].id;
@@ -39,8 +39,8 @@ describe('Tests for get /plan-options', () => {
 		expect(response.status).toBe(200);
 		expect(response.body.length).toBe(1);
 		expect(response.body[0]).toEqual({
-			planId: testPlan.id,
-			planType: testPlan.type,
+			planTypeId: testPlanType.id,
+			planType: testPlanType.type,
 			deliveryOptions: [
 				{
 					id: testDeliveryOption.id,

@@ -1,45 +1,7 @@
 import planRepository from '../repositories/planRepository.js';
 import productService from './productService.js';
+import addressService from './addressService.js';
 import calculateNextDeliveries from '../helpers/nextDeliveries.js';
-
-async function isRegisteredUser({ userId }) {
-	const plan = await planRepository.searchUserPlanType({ userId });
-
-	if (!plan) {
-		return null;
-	}
-
-	if (plan.rowCount === 0) {
-		return false;
-	}
-
-	return true;
-}
-
-async function setUserPlan({ userId, planId, deliveryOption }) {
-	const plan = await isRegisteredUser({ userId });
-
-	if (plan === null) {
-		return null;
-	}
-
-	if (plan === true) {
-		return false;
-	}
-
-	const createdPlan = await planRepository.insertUserPlan({
-		userId,
-		planId,
-		deliveryOption,
-		subscriptionDate: new Date(),
-	});
-
-	if (!createdPlan) {
-		return null;
-	}
-
-	return true;
-}
 
 function formatPlanOptions({ planOptions }) {
 	const formattedPlanOptions = [];
@@ -47,7 +9,7 @@ function formatPlanOptions({ planOptions }) {
 
 	planOptions.forEach((option) => {
 		formattedOption = formattedPlanOptions.find(
-			(obj) => obj.planId === option.planId
+			(obj) => obj.planTypeId === option.planTypeId
 		);
 		if (formattedOption) {
 			return formattedOption.deliveryOptions.push({
@@ -56,7 +18,7 @@ function formatPlanOptions({ planOptions }) {
 			});
 		}
 		return formattedPlanOptions.push({
-			planId: option.planId,
+			planTypeId: option.planTypeId,
 			planType: option.planType,
 			deliveryOptions: [
 				{
@@ -137,4 +99,87 @@ async function getUserPlanInformations({ userId }) {
 	};
 }
 
-export default { setUserPlan, getPlanOptions, getUserPlanInformations };
+async function isRegisteredUser({ userId }) {
+	const plan = await planRepository.searchUserPlanType({ userId });
+
+	if (!plan) {
+		return null;
+	}
+
+	if (plan.rowCount === 0) {
+		return false;
+	}
+
+	return true;
+}
+
+async function setUserPlan({ userId, planTypeId, deliveryOptionId }) {
+	const now = new Date();
+
+	const createdPlan = await planRepository.insertUserPlan({
+		userId,
+		planTypeId,
+		deliveryOptionId,
+		subscriptionDate: now,
+	});
+
+	if (!createdPlan) {
+		return null;
+	}
+
+	return createdPlan.rows[0].id;
+}
+
+async function subscribeUser({
+	userId,
+	planTypeId,
+	deliveryOptionId,
+	productsList,
+	address,
+}) {
+	const plan = await isRegisteredUser({ userId });
+
+	if (plan === null) {
+		return null;
+	}
+
+	if (plan) {
+		return false;
+	}
+
+	const createdPlanId = setUserPlan({ userId, planTypeId, deliveryOptionId });
+
+	if (!createdPlanId) {
+		return null;
+	}
+
+	const createdAddressId = await addressService.insertAddress({
+		userId,
+		address,
+	});
+
+	if (!createdAddressId) {
+		planRepository.deleteUserPlan({ planId: createdPlanId });
+		return null;
+	}
+
+	const addedProducts = await productService.insertProducts({
+		userId,
+		productsList,
+	});
+
+	if (!addedProducts) {
+		await planRepository.deleteUserPlan({ planId: createdPlanId });
+		await addressService.deleteAddress({ addressId: createdAddressId });
+		return null;
+	}
+
+	return true;
+}
+
+export default {
+	setUserPlan,
+	getPlanOptions,
+	getUserPlanInformations,
+	subscribeUser,
+};

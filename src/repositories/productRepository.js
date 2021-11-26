@@ -28,7 +28,27 @@ async function searchUserChosenProducts({ userId }) {
 	}
 }
 
+async function insertSelectedProducts({ userId, productsList }) {
+	try {
+		const valuesQuery = productsList
+			.map((productId) => `(${userId}, ${productId})`)
+			.join(', ');
+
+		await dbConnection.query(`
+			INSERT INTO users_products
+			(user_id, product_id)
+			VALUES
+			${valuesQuery};`);
+
+		return true;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
 export default {
 	searchProducts,
 	searchUserChosenProducts,
+	insertSelectedProducts,
 };

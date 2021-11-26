@@ -93,11 +93,6 @@ export default function calculateNextDeliveries({
 		});
 	}
 
-	console.log({
-		planType,
-		deliveryOption,
-		lastDeliveryDate,
-	});
 	return calculateMonthlyDeliveries({
 		deliveryOption: Number(deliveryOption),
 		lastDeliveryDate,

@@ -56,15 +56,15 @@ async function insertPlanType({ type }) {
 	);
 }
 
-async function insertDeliveryOptions({ planId, optionName }) {
+async function insertDeliveryOptions({ planTypeId, optionName }) {
 	return dbConnection.query(
 		`
         INSERT INTO delivery_options
-                (plan_id, name)
+                (plan_type_id, name)
         VALUES
                 ($1, $2)
 		RETURNING id;`,
-		[planId, optionName]
+		[planTypeId, optionName]
 	);
 }
 

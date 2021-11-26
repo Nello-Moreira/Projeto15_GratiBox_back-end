@@ -12,11 +12,12 @@ CREATE TABLE "users" (
 
 CREATE TABLE "addresses" (
 	"id" serial NOT NULL,
-	"street_name" TEXT NOT NULL,
+	"user_id" integer NOT NULL,
+	"receiver_name" TEXT NOT NULL,
 	"zip_code" TEXT NOT NULL,
+	"street_name" TEXT NOT NULL,
 	"city" TEXT NOT NULL,
 	"state_id" integer NOT NULL,
-	"user_id" integer NOT NULL,
 	CONSTRAINT "addresses_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -47,7 +48,7 @@ CREATE TABLE "plan_types" (
 
 CREATE TABLE "delivery_options" (
 	"id" serial NOT NULL,
-	"plan_id" integer NOT NULL,
+	"plan_type_id" integer NOT NULL,
 	"name" TEXT NOT NULL,
 	CONSTRAINT "delivery_options_pk" PRIMARY KEY ("id")
 ) WITH (
@@ -126,7 +127,7 @@ CREATE TABLE "sessions" (
 CREATE TABLE "users_plans" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
-	"plan_id" integer NOT NULL,
+	"plan_type_id" integer NOT NULL,
 	"delivery_option_id" integer NOT NULL,
 	"subscription_date" DATE NOT NULL,
 	CONSTRAINT "users_plans_pk" PRIMARY KEY ("id")
@@ -142,7 +143,7 @@ ALTER TABLE "addresses" ADD CONSTRAINT "addresses_fk1" FOREIGN KEY ("user_id") R
 
 
 
-ALTER TABLE "delivery_options" ADD CONSTRAINT "delivery_options_fk0" FOREIGN KEY ("plan_id") REFERENCES "plan_types"("id");
+ALTER TABLE "delivery_options" ADD CONSTRAINT "delivery_options_fk0" FOREIGN KEY ("plan_type_id") REFERENCES "plan_types"("id");
 
 
 ALTER TABLE "users_products" ADD CONSTRAINT "users_products_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id");
@@ -202,7 +203,7 @@ INSERT INTO "plan_types" ("type") VALUES
 ('semanal'),
 ('mensal');
 
-INSERT INTO "delivery_options" ("plan_id", "name") VALUES 
+INSERT INTO "delivery_options" ("plan_type_id", "name") VALUES 
 (1, 'segunda-feira'),
 (1, 'quarta-feira'),
 (1, 'sexta-feira'),

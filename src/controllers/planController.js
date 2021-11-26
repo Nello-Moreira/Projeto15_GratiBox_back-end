@@ -32,4 +32,24 @@ async function getUserPlanInformations(request, response) {
 	return response.status(200).send(planInformations);
 }
 
-export default { getPlanOptions, getUserPlanInformations };
+async function subscribe(request, response) {
+	const { userId } = request.locals;
+	const subscription = request.body;
+
+	const subscribed = await planService.subscribeUser({
+		...subscription,
+		userId,
+	});
+
+	if (subscribed === false) {
+		return response.status(409).send('User is already subscribed');
+	}
+
+	if (subscribed === null) {
+		return response.sendStatus(500);
+	}
+
+	return response.sendStatus(201);
+}
+
+export default { getPlanOptions, getUserPlanInformations, subscribe };

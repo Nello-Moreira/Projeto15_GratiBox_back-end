@@ -23,7 +23,7 @@ async function searchUserPlanInformations({ userId }) {
 				delivery_options.name as "deliveryOption"
 			FROM users_plans
 			JOIN plan_types
-				ON plan_types.id = users_plans.plan_id
+				ON plan_types.id = users_plans.plan_type_id
 			JOIN delivery_options
 				ON delivery_options.id = users_plans.delivery_option_id
 			WHERE users_plans.user_id = $1 ;
@@ -48,39 +48,50 @@ async function searchLastDeliveryDate({ userId }) {
 	}
 }
 
-async function insertUserPlan({
-	userId,
-	planId,
-	deliveryOption,
-	subscriptionDate,
-}) {
+async function searchPlanOptions() {
 	try {
-		await dbConnection.query(
-			`INSERT INTO users_plans
-                (user_id, plan_id, delivery_option_id, subscription_date)
-            VALUES
-                ($1, $2, $3, $4);`,
-			[userId, planId, deliveryOption, subscriptionDate]
+		return await dbConnection.query(
+			`SELECT
+				plan_types.id AS "planTypeId",
+				plan_types.type AS "planType",
+				delivery_options.id AS "deliveryOptionId",
+				delivery_options.name AS "deliveryOption"
+			FROM plan_types
+			JOIN delivery_options
+				ON delivery_options.plan_type_id = plan_types.id;`
 		);
-		return true;
 	} catch (error) {
 		console.error(error);
 		return null;
 	}
 }
 
-async function searchPlanOptions() {
+async function insertUserPlan({
+	userId,
+	planTypeId,
+	deliveryOptionId,
+	subscriptionDate,
+}) {
 	try {
-		return await dbConnection.query(
-			`SELECT
-				plan_types.id AS "planId",
-				plan_types.type AS "planType",
-				delivery_options.id AS "deliveryOptionId",
-				delivery_options.name AS "deliveryOption"
-			FROM plan_types
-			JOIN delivery_options
-				ON delivery_options.plan_id = plan_types.id;`
+		return dbConnection.query(
+			`INSERT INTO users_plans
+                (user_id, plan_type_id, delivery_option_id, subscription_date)
+            VALUES
+                ($1, $2, $3, $4)
+			RETURNING id;`,
+			[userId, planTypeId, deliveryOptionId, subscriptionDate]
 		);
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+async function deleteUserPlan({ planId }) {
+	try {
+		return dbConnection.query('DELETE FROM users_plans WHERE id = $1;', [
+			planId,
+		]);
 	} catch (error) {
 		console.error(error);
 		return null;
@@ -93,4 +104,5 @@ export default {
 	searchLastDeliveryDate,
 	searchPlanOptions,
 	insertUserPlan,
+	deleteUserPlan,
 };

@@ -5,10 +5,10 @@ function createPlanType() {
 	};
 }
 
-function createDeliveryOption(planId) {
+function createDeliveryOption(planTypeId) {
 	return {
 		id: null,
-		planId,
+		planTypeId,
 		name: 'TestOption',
 	};
 }

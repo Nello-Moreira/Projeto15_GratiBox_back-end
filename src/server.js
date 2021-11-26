@@ -26,7 +26,7 @@ server.get('/plan-options', planController.getPlanOptions);
 
 server.use(tokenMiddleware);
 
-server.post(subscribe.route, subscribe.postSubscription);
+server.post('/subscribe', planController.subscribe);
 
 server.get('/plan-informations', planController.getUserPlanInformations);
 

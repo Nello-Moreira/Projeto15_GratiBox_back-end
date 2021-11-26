@@ -2,7 +2,7 @@ import internalErrorResponse from '../helpers/serverError.js';
 import searchPlan from '../repositories/plansTable.js';
 import { updateUserPlan } from '../repositories/usersPlansTable.js';
 import { insertSelectedProducts } from '../repositories/usersProductsTable.js';
-import insertAddress from '../repositories/addressesTable.js';
+//import insertAddress from '../repositories/addressesTable.js';
 import userRepository from '../repositories/userRepository.js';
 
 const route = '/subscribe';

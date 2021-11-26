@@ -14,7 +14,7 @@ const searchPlanInformations = (token) =>
 		JOIN users_plans
 			ON users_plans.user_id = users.id
 		JOIN plan_types
-			ON plan_types.id = users_plans.plan_id
+			ON plan_types.id = users_plans.plan_type_id
 		JOIN delivery_options
 			ON delivery_options.id = users_plans.delivery_option_id
 		WHERE sessions.token = $1;`,
@@ -26,13 +26,13 @@ const insertNewUserPlan = (userId) =>
 		userId,
 	]);
 
-const updateUserPlan = ({ userId, planId, deliveryOption }) =>
+const updateUserPlan = ({ userId, planTypeId, deliveryOption }) =>
 	dbConnection.query(
 		`
         UPDATE users_plans
-        SET plan_id = $2, delivery_option_id = $3, subscription_date = NOW()
+        SET plan_type_id = $2, delivery_option_id = $3, subscription_date = NOW()
         WHERE user_id = $1;`,
-		[userId, planId, deliveryOption]
+		[userId, planTypeId, deliveryOption]
 	);
 
 const deleteAllUsersPlans = () =>

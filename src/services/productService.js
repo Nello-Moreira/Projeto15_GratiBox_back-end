@@ -12,4 +12,8 @@ async function getUserProductsList({ userId }) {
 	return productsList.rows.map((product) => product.name);
 }
 
-export default { getUserProductsList };
+async function insertProducts({ userId, productsList }) {
+	return productRepository.insertSelectedProducts({ userId, productsList });
+}
+
+export default { getUserProductsList, insertProducts };
