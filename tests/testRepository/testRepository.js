@@ -100,6 +100,10 @@ async function deleteAllPlanOptions() {
 	return dbConnection.query('DELETE FROM plan_types;');
 }
 
+async function deleteAllUserPlans() {
+	return dbConnection.query('DELETE FROM users_plans;');
+}
+
 async function clearDataBase() {
 	await dbConnection.query('DELETE FROM sessions;');
 	await dbConnection.query('DELETE FROM addresses;');
@@ -117,6 +121,48 @@ async function clearDataBase() {
 	return true;
 }
 
+async function subscribeUser({
+	userId,
+	planTypeId,
+	deliveryOptionId,
+	productsList,
+	address,
+}) {
+	const now = new Date();
+
+	await dbConnection.query(
+		`INSERT INTO users_plans
+			(user_id, plan_type_id, delivery_option_id, subscription_date)
+		VALUES
+			($1, $2, $3, $4)
+		RETURNING id;`,
+		[userId, planTypeId, deliveryOptionId, now]
+	);
+
+	const { receiverName, zipCode, streetName, city, stateId } = address;
+
+	await dbConnection.query(
+		`
+		INSERT INTO addresses
+			(user_id, receiver_name, zip_code, street_name, city, state_id)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id;`,
+		[userId, receiverName, zipCode, streetName, city, stateId]
+	);
+
+	const valuesQuery = productsList
+		.map((productId) => `(${userId}, ${productId})`)
+		.join(', ');
+
+	await dbConnection.query(`
+			INSERT INTO users_products
+			(user_id, product_id)
+			VALUES
+			${valuesQuery};`);
+
+	return true;
+}
+
 export default {
 	searchUserByParam,
 	searchSession,
@@ -126,11 +172,13 @@ export default {
 	insertProduct,
 	insertPlanType,
 	insertDeliveryOptions,
+	subscribeUser,
 	deleteAllUsers,
 	deleteAllSessions,
 	deleteAllProducts,
 	deleteAllAddresses,
 	deleteAllStates,
 	deleteAllPlanOptions,
+	deleteAllUserPlans,
 	clearDataBase,
 };

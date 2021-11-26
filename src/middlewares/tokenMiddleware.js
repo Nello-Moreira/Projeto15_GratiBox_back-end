@@ -3,12 +3,17 @@ import { isInvalidToken } from '../validation/schemas.js';
 
 async function tokenMiddleware(request, response, next) {
 	const { authorization } = request.headers;
+
+	if (!authorization) {
+		return response.sendStatus(401);
+	}
+
 	const token = authorization.replace('Bearer ', '');
 
 	const invalidToken = isInvalidToken({ token });
 
 	if (invalidToken) {
-		return response.status(400).send('Invalid token');
+		return response.sendStatus(401);
 	}
 
 	const session = await userRepository.searchSession({ token });
