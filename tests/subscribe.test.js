@@ -90,6 +90,14 @@ describe('Tests for post /subscribe', () => {
 		expect(response.status).toBe(409);
 	});
 
+	it('should return 400 when an invalid subscription body is provided', async () => {
+		const response = await supertest(server)
+			.post(route)
+			.set('Authorization', `Bearer ${user.token}`)
+			.send({ ...subscriptionBody, address: null });
+		expect(response.status).toBe(400);
+	});
+
 	it('should return 401 when there is no authorization header', async () => {
 		const response = await supertest(server).post(route).send(subscriptionBody);
 		expect(response.status).toBe(401);
