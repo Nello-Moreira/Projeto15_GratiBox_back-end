@@ -1,4 +1,5 @@
 import planService from '../services/planService.js';
+import { isInvalidSubscription } from '../validation/schemas.js';
 
 async function getPlanOptions(request, response) {
 	const planOptions = await planService.getPlanOptions();
@@ -35,6 +36,12 @@ async function getUserPlanInformations(request, response) {
 async function subscribe(request, response) {
 	const { userId } = request.locals;
 	const subscription = request.body;
+
+	const invalidSubscription = isInvalidSubscription(subscription);
+
+	if (invalidSubscription) {
+		return response.status(400).send(invalidSubscription.message);
+	}
 
 	const subscribed = await planService.subscribeUser({
 		...subscription,

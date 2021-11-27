@@ -31,10 +31,29 @@ const tokenSchema = Joi.object({
 
 const isInvalidToken = (input) => tokenSchema.validate(input).error;
 
-const planIdSchema = Joi.object({
-	planId: Joi.number().integer().greater(1).required(),
-}).max(1);
+const subscriptionSchema = Joi.object({
+	planTypeId: Joi.number().min(1).required(),
+	deliveryOptionId: Joi.number().min(1).required(),
+	// eslint-disable-next-line newline-per-chained-call
+	productsList: Joi.array().items(Joi.number().min(1)).min(1).max(3).required(),
+	address: Joi.object({
+		receiverName: Joi.string().min(1).required(),
+		zipCode: Joi.string()
+			.pattern(/[0-9]{5}-[0-9]{3}/)
+			.required(),
+		streetName: Joi.string().min(1).required(),
+		city: Joi.string().min(1).required(),
+		stateId: Joi.number().min(1).required(),
+	}),
+});
 
-const isInvalidPlanId = (input) => planIdSchema.validate(input).error;
+const isInvalidSubscription = (input) =>
+	// eslint-disable-next-line implicit-arrow-linebreak
+	subscriptionSchema.validate(input).error;
 
-export { isInvalidSignUp, isInvalidLogin, isInvalidToken, isInvalidPlanId };
+export {
+	isInvalidSignUp,
+	isInvalidLogin,
+	isInvalidToken,
+	isInvalidSubscription,
+};
