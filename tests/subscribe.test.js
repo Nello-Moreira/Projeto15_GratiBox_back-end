@@ -32,7 +32,7 @@ describe('Tests for post /subscribe', () => {
 			})
 		).rows[0].id;
 
-		testDeliveryOption = planFactory.createDeliveryOption(testPlanType.id);
+		testDeliveryOption = planFactory.createDeliveryOption(testPlanType);
 		testDeliveryOption.id = (
 			await testRepository.insertDeliveryOptions({
 				planTypeId: testDeliveryOption.planTypeId,

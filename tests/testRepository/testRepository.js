@@ -1,3 +1,4 @@
+import faker from 'faker';
 import { dbConnection } from '../../src/repositories/connection';
 
 async function searchUserByParam({ param, value }) {
@@ -128,7 +129,7 @@ async function subscribeUser({
 	productsList,
 	address,
 }) {
-	const now = new Date();
+	const subscriptionDate = faker.date.past(1);
 
 	await dbConnection.query(
 		`INSERT INTO users_plans
@@ -136,7 +137,7 @@ async function subscribeUser({
 		VALUES
 			($1, $2, $3, $4)
 		RETURNING id;`,
-		[userId, planTypeId, deliveryOptionId, now]
+		[userId, planTypeId, deliveryOptionId, subscriptionDate]
 	);
 
 	const { receiverName, zipCode, streetName, city, stateId } = address;

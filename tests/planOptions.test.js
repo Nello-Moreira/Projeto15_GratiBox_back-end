@@ -17,7 +17,7 @@ describe('Tests for get /plan-options', () => {
 		});
 		testPlanType.id = queryResult.rows[0].id;
 
-		testDeliveryOption = planFactory.createDeliveryOption(testPlanType.id);
+		testDeliveryOption = planFactory.createDeliveryOption(testPlanType);
 		const optionId = await testRepository.insertDeliveryOptions({
 			planTypeId: testDeliveryOption.planTypeId,
 			optionName: testDeliveryOption.name,
