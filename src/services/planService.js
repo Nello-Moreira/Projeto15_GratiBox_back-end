@@ -3,6 +3,22 @@ import productService from './productService.js';
 import addressService from './addressService.js';
 import calculateNextDeliveries from '../helpers/nextDeliveries.js';
 
+async function isSubscriber({ userId }) {
+	const planInformations = await planRepository.searchUserPlanByUserId({
+		userId,
+	});
+
+	if (!planInformations) {
+		return null;
+	}
+
+	if (planInformations.rowCount === 0) {
+		return false;
+	}
+
+	return true;
+}
+
 function formatPlanOptions({ planOptions }) {
 	const formattedPlanOptions = [];
 	let formattedOption;
@@ -178,6 +194,7 @@ async function subscribeUser({
 }
 
 export default {
+	isSubscriber,
 	setUserPlan,
 	getPlanOptions,
 	getUserPlanInformations,

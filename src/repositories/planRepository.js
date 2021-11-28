@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { dbConnection } from './connection.js';
 
-async function searchUserPlanType({ userId }) {
+async function searchUserPlanByUserId({ userId }) {
 	try {
 		return await dbConnection.query(
-			'SELECT * FROM users_plans WHERE user_id = $1 ;',
+			'SELECT id FROM users_plans WHERE user_id = $1 ;',
 			[userId]
 		);
 	} catch (error) {
@@ -99,7 +99,7 @@ async function deleteUserPlan({ planId }) {
 }
 
 export default {
-	searchUserPlanType,
+	searchUserPlanByUserId,
 	searchUserPlanInformations,
 	searchLastDeliveryDate,
 	searchPlanOptions,

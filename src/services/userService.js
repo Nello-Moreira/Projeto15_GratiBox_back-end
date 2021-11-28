@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import userRepository from '../repositories/userRepository.js';
+import planService from './planService.js';
 import { isCorrectPassword, hashPassword } from '../helpers/passwordEncrypt.js';
 
 async function authenticate({ email, password }) {
@@ -32,7 +33,11 @@ async function authenticate({ email, password }) {
 
 	if (!createdSession) return null;
 
-	return { username: user.rows[0].name, token };
+	const isSubscriber = await planService.isSubscriber({
+		userId: user.rows[0].id,
+	});
+
+	return { username: user.rows[0].name, token, isSubscriber };
 }
 
 async function registerUser({ name, email, password }) {
