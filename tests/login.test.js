@@ -41,6 +41,7 @@ describe('Tests for post /login', () => {
 		expect(response.status).toBe(200);
 		expect(response.body).toHaveProperty('username');
 		expect(response.body).toHaveProperty('token');
+		expect(response.body).toHaveProperty('isSubscriber');
 		expect(session.rowCount).toBe(1);
 	});
 
