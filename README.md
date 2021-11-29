@@ -52,7 +52,7 @@ This step will create a production, a development and a test database and envs v
 
 # API Docs
 
-## Sign-up:
+## Sign-up
 
 - action: create an account
 - route /sign-up
@@ -70,7 +70,7 @@ This step will create a production, a development and a test database and envs v
 - response: 201 created
 - response: 400 bad request (for invalid body)
 
-## Login:
+## Login
 
 - action: login
 - route /login
@@ -98,7 +98,7 @@ This step will create a production, a development and a test database and envs v
 - response: 400 bad request (for invalid body)
 - response: 404 not found (for wrong email or password)
 
-## Plan options:
+## Plan options
 
 - action: get plan options and their delivery options
 - route /plan-options
@@ -123,7 +123,7 @@ This step will create a production, a development and a test database and envs v
 
 - response: 204 no content
 
-## Products:
+## Products
 
 - action: get products options
 - route /products
@@ -142,7 +142,7 @@ This step will create a production, a development and a test database and envs v
 
 - response: 204 no content
 
-## States:
+## States
 
 - action: get states available for delivery
 - route /states
@@ -162,7 +162,7 @@ This step will create a production, a development and a test database and envs v
 
 - response: 204 no content
 
-## Subscribe:
+## Subscribe
 
 - action: subscribe user at a plan
 - route /subscribe
@@ -191,7 +191,7 @@ This step will create a production, a development and a test database and envs v
 - response: 400 bad request (for invalid body)
 - response: 409 conflict (when user is already subscribed)
 
-## Plan informations:
+## Plan informations
 
 - action: get user plan informations
 - route /plan-informations
