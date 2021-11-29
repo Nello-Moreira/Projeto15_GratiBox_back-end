@@ -5,9 +5,9 @@ let path;
 if (process.env.NODE_ENV === 'production') {
 	path = '.env';
 } else if (process.env.NODE_ENV === 'development') {
-	path = '.env.development';
+	path = '.development.env';
 } else {
-	path = '.env.test';
+	path = '.test.env';
 }
 
 dotenv.config({
